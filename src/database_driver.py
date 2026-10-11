@@ -1,4 +1,5 @@
 import sqlite3
+import ftdataclasses
 
 def init():
 
@@ -100,8 +101,8 @@ def create_test_days():
             cursor = conn.cursor()
 
             days_data = [
-                (1, 'Saturday', 1, '2026-10-10'),
-                (2, 'Sunday', 1, '2026-10-11')
+                (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3),
+                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 3)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -112,7 +113,7 @@ def create_test_days():
                 (6, 'Brussel sprouts', 1, 180, 12, 32, 12, 0),
                 (7, 'fiberone soft 2 pack', 1, 140, 4, 34, 12, 6)
             ]
-            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date) VALUES (?, ?, ?, ?)", days_data)
+            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3) VALUES (?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
 
             # commit the changes
@@ -163,3 +164,34 @@ def get_user_data(user_id):
 
     except sqlite3.OperationalError as e:
         print("Error finding user:", e)
+
+
+def get_days_detail(day_id, user_id):
+    # create a database connection
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            # create a cursor
+            cursor = conn.cursor()
+
+            # Parameterized query using ? placeholder
+            query_statement = """
+                SELECT f.id, f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat              
+                FROM foodstuffs f 
+                WHERE id IN (SELECT id FROM days WHERE f.id = days.entry1 AND days.id = ?);
+            """
+            #                INNER JOIN days d ON d.id = ? AND d.entry1 = f.id;
+            print("query : " + query_statement)
+            print("day_id : " + str(day_id) + " : user_id : " + str(user_id))
+            #cursor.execute("SELECT * FROM foodstuffs WHERE days.user_id = ? AND days.id = ?", (user_id, day_id))
+            cursor.execute(query_statement, str(day_id))
+
+            rows = cursor.fetchall()
+            if rows:
+                print("Found rows:", rows)
+                # Populate Dataclass instances
+                #entries = [ftdataclasses.Foodstuff(*row) for row in rows]
+                entries = rows
+                return entries
+
+    except sqlite3.OperationalError as e:
+        print("Error finding foodstuffs for day entry:", e)
