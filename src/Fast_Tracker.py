@@ -20,6 +20,7 @@ else:
 
 database_driver.init()
 database_driver.create_user()
+database_driver.create_test_days()
 
 def login():
     user_id = database_driver.check_login(username_entru.get(), password_entry.get())
@@ -28,6 +29,14 @@ def login():
         messagebox.showerror("Error", "Login Failed")
     else:
         frame.pack_forget()
+        data = database_driver.get_user_data(user_id)
+        # Iterate through rows and columns to place widgets
+        for row_idx, row_data in enumerate(data):
+            for col_idx, value in enumerate(row_data):
+                # Create a Label widget for each cell
+                label = tk.Label(entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                # Place the widget in the grid
+                label.grid(row=row_idx, column=col_idx, sticky="nsew")
         entry_frame.pack()
 
 #tk._test()

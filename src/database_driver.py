@@ -14,7 +14,11 @@ def init():
                 id INTEGER PRIMARY KEY, 
                 name text NOT NULL, 
                 user_id INTEGER NOT NULL, 
-                actual_date DATE, 
+                actual_date DATE,
+                entry1 text,
+                entry2 text,
+                FOREIGN KEY (entry1) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry2) REFERENCES foodstuffs (id),
                 FOREIGN KEY (user_id) REFERENCES user (id)
             );""",
 
@@ -67,6 +71,27 @@ def create_user():
     except sqlite3.OperationalError as e:
         print("Failed to update user table:", e)
 
+def create_test_days():
+
+    # create a database connection
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            # create a cursor
+            cursor = conn.cursor()
+
+            days_data = [
+                (1, 'Saturday', 1, '2026-10-10'),
+                (2, 'Sunday', 1, '2026-10-11')
+            ]
+            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date) VALUES (?, ?, ?, ?)", days_data)
+
+            # commit the changes
+            conn.commit()
+
+            print("DAYS table updated successfully.")
+    except sqlite3.OperationalError as e:
+        print("Failed to update days table:", e)
+
 def check_login(username, password):
 
             # create a database connection
@@ -90,3 +115,21 @@ def check_login(username, password):
 
             except sqlite3.OperationalError as e:
                 print("Error finding user:", e)
+
+
+def get_user_data(user_id):
+    # create a database connection
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            # create a cursor
+            cursor = conn.cursor()
+
+            # Parameterized query using ? placeholder
+            cursor.execute("SELECT * FROM days WHERE days.user_id = ?", (user_id, ))
+            rows = cursor.fetchall()
+            if rows:
+                print("Found rows:", rows)
+                return rows
+
+    except sqlite3.OperationalError as e:
+        print("Error finding user:", e)
