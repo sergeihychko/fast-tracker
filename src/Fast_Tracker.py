@@ -37,12 +37,28 @@ def login():
                 label = tk.Label(entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                 # Place the widget in the grid
                 label.grid(row=row_idx, column=col_idx, sticky="nsew")
+            btn = tk.Button(entry_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue", fg="white", command=lambda: page(row_data))
+            # Place the widget in the grid
+            btn.grid(row=row_idx, column=col_idx+1, sticky="nsew")
         entry_frame.pack()
+
+def page(day_data):
+    print("Edit day button clicked")
+    entry_frame.pack_forget()
+
+    day_label = tkinter.Label(day_frame, text=day_data[1], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+    date_label = tkinter.Label(day_frame, text=day_data[3], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+
+    day_label.grid(row=0, column=0)
+    date_label.grid(row=0, column=1)
+
+    day_frame.pack()
 
 #tk._test()
 root = tk.Tk()
 root.title("Fast Tracker")
-root.geometry("340x440")
+root.minsize(340,440)
+#root.geometry("340x440")
 root.configure(background="#333333")
 
 frame = tk.Frame(root, background="#333333")
@@ -66,6 +82,9 @@ frame.pack()
 
 # General data page
 entry_frame = tk.Frame(root, background="#333333")
+
+# General day form
+day_frame = tk.Frame(root, background="#333333")
 
 root.mainloop()
 

@@ -17,8 +17,28 @@ def init():
                 actual_date DATE,
                 entry1 text,
                 entry2 text,
+                entry3 text,
+                entry4 text,
+                entry5 text,
+                entry6 text,
+                entry7 text,
+                entry8 text,
+                entry9 text,
+                entry10 text,
+                entry11 text,
+                entry12 text,
                 FOREIGN KEY (entry1) REFERENCES foodstuffs (id),
                 FOREIGN KEY (entry2) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry3) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry4) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry5) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry6) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry7) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry8) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry9) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry10) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry11) REFERENCES foodstuffs (id),
+                FOREIGN KEY (entry12) REFERENCES foodstuffs (id),
                 FOREIGN KEY (user_id) REFERENCES user (id)
             );""",
 
@@ -83,12 +103,22 @@ def create_test_days():
                 (1, 'Saturday', 1, '2026-10-10'),
                 (2, 'Sunday', 1, '2026-10-11')
             ]
+            foodstuffs_data = [
+                (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
+                (2, 'Light cream cheese', 1, 60, 2, 2, 0 ,5),
+                (3, 'Lentil Roasted Veg soup', 1, 180, 13, 42, 15, 1),
+                (4, 'Catfish fillet', 1, 150, 17, 0, 0, 7),
+                (5, 'brown rice 1cup', 1, 220, 4, 41, 2, 5),
+                (6, 'Brussel sprouts', 1, 180, 12, 32, 12, 0),
+                (7, 'fiberone soft 2 pack', 1, 140, 4, 34, 12, 6)
+            ]
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date) VALUES (?, ?, ?, ?)", days_data)
+            cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
 
             # commit the changes
             conn.commit()
 
-            print("DAYS table updated successfully.")
+            print("DAYS and FOODSTUFFS table updated successfully.")
     except sqlite3.OperationalError as e:
         print("Failed to update days table:", e)
 
