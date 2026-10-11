@@ -66,3 +66,27 @@ def create_user():
             print("USER table updated successfully.")
     except sqlite3.OperationalError as e:
         print("Failed to update user table:", e)
+
+def check_login(username, password):
+
+            # create a database connection
+            try:
+                with sqlite3.connect('../data/fast-tracker.db') as conn:
+                    # create a cursor
+                    cursor = conn.cursor()
+                    userid = 0
+
+                    # Parameterized query using ? placeholder
+                    cursor.execute("SELECT id, user_name, password FROM users WHERE user_name = ? AND password = ?", (username, password))
+                    row = cursor.fetchone()
+                    if row:
+                        userid = row[0]
+                        print("Found row:", row)
+
+                    # close connection
+                    #conn.close()
+
+                    return userid
+
+            except sqlite3.OperationalError as e:
+                print("Error finding user:", e)
