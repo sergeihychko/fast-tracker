@@ -75,7 +75,13 @@ class MainApp(tk.Tk):
             date_label.grid(row=0, column=1)
 
             entries = database_driver.get_days_detail(day_data[0], day_data[2])
-            print(entries)
+            print("entries for the date : " + str(entries))
+            for row_idx, row_data in enumerate(entries):
+                for col_idx, value in enumerate(row_data):
+                    # Create a Label widget for each cell
+                    label = tk.Label(day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                    # Place the widget in the grid
+                    label.grid(row=row_idx, column=col_idx, sticky="nsew")
 
             back_button = tk.Button(day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue", fg="white", command=backToDays)
             back_button.grid(row=1, column=0, columnspan=2)
@@ -115,7 +121,6 @@ class MainApp(tk.Tk):
         day_frame = tk.Frame(root, background="#333333")
 
         root.mainloop()
-
 
 
 if __name__ == "__main__":

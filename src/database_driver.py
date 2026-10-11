@@ -101,8 +101,8 @@ def create_test_days():
             cursor = conn.cursor()
 
             days_data = [
-                (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3),
-                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 3)
+                (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 4, 5, 6, 0),
+                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 0, 0)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -111,9 +111,11 @@ def create_test_days():
                 (4, 'Catfish fillet', 1, 150, 17, 0, 0, 7),
                 (5, 'brown rice 1cup', 1, 220, 4, 41, 2, 5),
                 (6, 'Brussel sprouts', 1, 180, 12, 32, 12, 0),
-                (7, 'fiberone soft 2 pack', 1, 140, 4, 34, 12, 6)
+                (7, 'fiberone soft 2 pack', 1, 140, 4, 34, 12, 6),
+                (8, 'wheat thins crackers', 1, 140, 2, 23, 2, 5),
+                (9, 'Progresso Chicken Noodle', 1, 130, 11, 19, 2, 3)
             ]
-            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3) VALUES (?, ?, ?, ?, ?, ?, ?)", days_data)
+            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3, entry4, entry5, entry6, entry7) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
 
             # commit the changes
@@ -175,9 +177,9 @@ def get_days_detail(day_id, user_id):
 
             # Parameterized query using ? placeholder
             query_statement = """
-                SELECT f.id, f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat              
-                FROM foodstuffs f 
-                WHERE id IN (SELECT id FROM days WHERE f.id = days.entry1 AND days.id = ?);
+                SELECT f.id, f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat            
+                FROM foodstuffs f, days d
+                WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7) AND d.id = ?;
             """
             #                INNER JOIN days d ON d.id = ? AND d.entry1 = f.id;
             print("query : " + query_statement)
@@ -192,6 +194,8 @@ def get_days_detail(day_id, user_id):
                 #entries = [ftdataclasses.Foodstuff(*row) for row in rows]
                 entries = rows
                 return entries
+            else:
+                print("No rows returned for day_id : " + str(day_id))
 
     except sqlite3.OperationalError as e:
         print("Error finding foodstuffs for day entry:", e)
