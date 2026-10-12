@@ -102,7 +102,7 @@ def create_test_days():
 
             days_data = [
                 (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 4, 5, 6, 0),
-                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 0, 0)
+                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 4, 6)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -177,12 +177,11 @@ def get_days_detail(day_id, user_id):
 
             # Parameterized query using ? placeholder
             query_statement = """
-                SELECT f.id, f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat            
+                SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat            
                 FROM foodstuffs f, days d
                 WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7) AND d.id = ?;
             """
-            #                INNER JOIN days d ON d.id = ? AND d.entry1 = f.id;
-            print("query : " + query_statement)
+
             print("day_id : " + str(day_id) + " : user_id : " + str(user_id))
             #cursor.execute("SELECT * FROM foodstuffs WHERE days.user_id = ? AND days.id = ?", (user_id, day_id))
             cursor.execute(query_statement, str(day_id))

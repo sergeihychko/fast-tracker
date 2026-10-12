@@ -10,3 +10,7 @@ Environment setup:
 pip install SQLAlchemy
 
 pip install --upgrade tk 
+
+pip install --upgrade pandas
+
+pip install --upgrade pandastable
