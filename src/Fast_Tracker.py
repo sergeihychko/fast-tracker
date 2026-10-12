@@ -44,43 +44,52 @@ class MainApp(tk.Tk):
                 messagebox.showerror("Error", "Login Failed")
             else:
                 self.current_user = user_id
-                create_entry_frame(user_id)
+                create_entry_frame()
 
 
-        def create_entry_frame(uid):
+        def create_entry_frame():
             frame.pack_forget()
-            data = database_driver.get_user_data(uid)
+            data = database_driver.get_user_data(self.current_user)
             # Iterate through rows and columns to place widgets
             for row_idx, row_data in enumerate(data):
+                date_id = 0
+                date_name = ""
+                date_text = ""
+                date_id = row_data[0]
+                date_name = row_data[1]
+                date_text = row_data[3]
                 for col_idx, value in enumerate(row_data):
                     # Create a Label widget for each cell
                     label = tk.Label(entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                     # Place the widget in the grid
                     label.grid(row=row_idx, column=col_idx, sticky="nsew")
                 btn = tk.Button(entry_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
-                                fg="white", command=lambda: page(row_data))
+                                fg="white", command=lambda: page(date_id, date_name, date_text))
                 # Place the widget in the grid
                 btn.grid(row=row_idx, column=col_idx + 1, sticky="nsew")
             entry_frame.pack()
 
         def backToDays():
             day_frame.pack_forget()
-            create_entry_frame(self.current_user)
+            create_entry_frame()
 
-        def page(day_data):
-            print("Edit day button clicked")
+        def page(date_id, date_name, date_text):
+            day_frame.pack_forget()
+            print("Edit day button clicked : ")
+            entries = database_driver.get_days_detail(date_id, self.current_user)
+            print("entries : " + str(entries))
             entry_frame.pack_forget()
 
-            day_label = tkinter.Label(day_frame, text=day_data[1], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-            date_label = tkinter.Label(day_frame, text=day_data[3], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+            day_label = tkinter.Label(day_frame, text=date_name, bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+            date_label = tkinter.Label(day_frame, text=date_text, bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
 
             day_label.grid(row=0, column=0)
             date_label.grid(row=0, column=1)
 
-            entries = database_driver.get_days_detail(day_data[0], day_data[2])
             df = pd.DataFrame(data=entries)
             df.columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
-            pt = Table(root, dataframe=df)
+
+            pt = Table(day_frame, dataframe=df, showtoolbar=True, showstatusbar=True)
             pt.show()
 
             #print("entries for the date : " + str(entries))
