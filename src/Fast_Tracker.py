@@ -26,6 +26,8 @@ class MainApp(tk.Tk):
         # Initialize global user data container in the controller
         self.current_user = 0
         self.current_day = 0
+        self.entry_frame = tk.Frame(root, background="#333333")
+        self.day_frame = tk.Frame(root, background="#333333")
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -55,7 +57,9 @@ class MainApp(tk.Tk):
 
         def create_entry_frame():
             frame.pack_forget()
-            entry_frame.pack_forget()
+            # Remove all existing child widgets
+            for child in self.entry_frame.winfo_children():
+                child.destroy()
             data = database_driver.get_user_data(self.current_user)
             print("back from get_user_data call with data : " + str(data))
             # Iterate through rows and columns to place widgets
@@ -64,30 +68,33 @@ class MainApp(tk.Tk):
                 print(" a day's values : " + str(date_id))
                 for col_idx, value in enumerate(row_data):
                     # Create a Label widget for each cell
-                    label = tk.Label(entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                    label = tk.Label(self.entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                     # Place the widget in the grid
                     label.grid(row=row_idx, column=col_idx, sticky="nsew")
-                btn = tk.Button(entry_frame, text="Edit day " + str(date_id), relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
+                btn = tk.Button(self.entry_frame, text="Edit day " + str(date_id), relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
                                 fg="white", command=lambda date_id=date_id: page(date_id))
                 #print("just wrote out the button call page({date_id})" + str(date_id))
                 # Place the widget in the grid
                 btn.grid(row=row_idx, column=col_idx + 1, sticky="nsew")
-            entry_frame.pack()
+            self.entry_frame.pack()
 
         def backToDays():
-            day_frame.pack_forget()
+            # Remove all existing child widgets
+            for child in self.day_frame.winfo_children():
+                child.destroy()
             create_entry_frame()
 
         def page(date_id):
-            print("enter page() method date_id = " + str(date_id))
-            entry_frame.pack_forget()
-            day_frame.pack_forget()
+            # Remove all existing child widgets
+            for child in self.day_frame.winfo_children():
+                child.destroy()
+
             entries = database_driver.get_days_detail(date_id, self.current_user)
             day_data = database_driver.get_day_entry(date_id)
             print(" date_id : " + str(date_id)  + " /   day_data : " + str(day_data))
 
-            day_label = tkinter.Label(day_frame, text=day_data[1], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-            date_label = tkinter.Label(day_frame, text=day_data[3], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+            day_label = tkinter.Label(self.day_frame, text=day_data[1], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+            date_label = tkinter.Label(self.day_frame, text=day_data[3], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
 
             day_label.grid(row=0, column=0)
             date_label.grid(row=0, column=1)
@@ -101,7 +108,7 @@ class MainApp(tk.Tk):
             columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
             for head_idx, value in enumerate(columns):
                 print(" in column header " + str(value))
-                header_label = tk.Label(day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                header_label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                 header_label.grid(row=1, column=head_idx, sticky="nsew")
 
             # Iterate through rows and columns to place widgets
@@ -110,14 +117,14 @@ class MainApp(tk.Tk):
                 print(" a day's values : " + str(date_id))
                 for col_idx, value in enumerate(row_data):
                     # Create a Label widget for each cell
-                    label = tk.Label(day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                    label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                     # Place the widget in the grid
                     label.grid(row=row_idx+2, column=col_idx, sticky="nsew")
 
-            back_button = tk.Button(day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue", fg="white", command=backToDays)
-            back_button.grid(row=row_idx+1, column=0, columnspan=2)
+            back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue", fg="white", command=backToDays)
+            back_button.grid(row=row_idx+3, column=0, columnspan=2)
 
-            day_frame.pack()
+            self.day_frame.pack()
 
 
         frame = tk.Frame(root, background="#333333")
@@ -138,12 +145,6 @@ class MainApp(tk.Tk):
         login_button.grid(row=3, column=0, columnspan=2)
 
         frame.pack()
-
-        # General data page
-        entry_frame = tk.Frame(root, background="#333333")
-
-        # General day form
-        day_frame = tk.Frame(root, background="#333333")
 
         root.mainloop()
 
