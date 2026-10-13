@@ -56,7 +56,6 @@ class MainApp(tk.Tk):
         def create_entry_frame():
             frame.pack_forget()
             entry_frame.pack_forget()
-            date_id = 0
             data = database_driver.get_user_data(self.current_user)
             print("back from get_user_data call with data : " + str(data))
             # Iterate through rows and columns to place widgets
@@ -68,8 +67,9 @@ class MainApp(tk.Tk):
                     label = tk.Label(entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                     # Place the widget in the grid
                     label.grid(row=row_idx, column=col_idx, sticky="nsew")
-                btn = tk.Button(entry_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
-                                fg="white", command=lambda: page(date_id))
+                btn = tk.Button(entry_frame, text="Edit day " + str(date_id), relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
+                                fg="white", command=lambda date_id=date_id: page(date_id))
+                #print("just wrote out the button call page({date_id})" + str(date_id))
                 # Place the widget in the grid
                 btn.grid(row=row_idx, column=col_idx + 1, sticky="nsew")
             entry_frame.pack()
@@ -79,6 +79,7 @@ class MainApp(tk.Tk):
             create_entry_frame()
 
         def page(date_id):
+            print("enter page() method date_id = " + str(date_id))
             entry_frame.pack_forget()
             day_frame.pack_forget()
             entries = database_driver.get_days_detail(date_id, self.current_user)
