@@ -142,16 +142,28 @@ def check_login(username, password):
                     row = cursor.fetchone()
                     if row:
                         userid = row[0]
-                        print("Found row:", row)
-
-                    # close connection
-                    #conn.close()
 
                     return userid
 
             except sqlite3.OperationalError as e:
                 print("Error finding user:", e)
 
+def get_day_entry(day_id):
+    # create a database connection
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            # create a cursor
+            cursor = conn.cursor()
+
+            # Parameterized query using ? placeholder
+            cursor.execute("SELECT * FROM days WHERE days.id = ?", (day_id, ))
+            rows = cursor.fetchone()
+            if rows:
+                #print("get_day_entry : " + str(rows))
+                return rows
+
+    except sqlite3.OperationalError as e:
+        print("Error finding day data : ", e)
 
 def get_user_data(user_id):
     # create a database connection
@@ -164,7 +176,7 @@ def get_user_data(user_id):
             cursor.execute("SELECT * FROM days WHERE days.user_id = ?", (user_id, ))
             rows = cursor.fetchall()
             if rows:
-                print("Found rows:", rows)
+                #print("Found rows:", rows)
                 return rows
 
     except sqlite3.OperationalError as e:
@@ -185,13 +197,11 @@ def get_days_detail(day_id, user_id):
                 WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7) AND d.id = ?;
             """
 
-            print("day_id : " + str(day_id) + " : user_id : " + str(user_id))
-            #cursor.execute("SELECT * FROM foodstuffs WHERE days.user_id = ? AND days.id = ?", (user_id, day_id))
             cursor.execute(query_statement, str(day_id))
 
             rows = cursor.fetchall()
             if rows:
-                print("Found rows:", rows)
+                #print("get_days_detail:", rows)
                 # Populate Dataclass instances
                 #entries = [ftdataclasses.Foodstuff(*row) for row in rows]
                 entries = rows
