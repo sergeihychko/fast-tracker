@@ -26,6 +26,7 @@ class MainApp(tk.Tk):
         # Initialize global user data container in the controller
         self.current_user = 0
         self.current_day = 0
+        self.frame = tk.Frame(root, background="#333333")
         self.entry_frame = tk.Frame(root, background="#333333")
         self.day_frame = tk.Frame(root, background="#333333")
 
@@ -56,8 +57,10 @@ class MainApp(tk.Tk):
 
 
         def create_entry_frame():
-            frame.pack_forget()
+            self.frame.pack_forget()
             # Remove all existing child widgets
+            for child in self.frame.winfo_children():
+                child.destroy()
             for child in self.entry_frame.winfo_children():
                 child.destroy()
             data = database_driver.get_user_data(self.current_user)
@@ -80,12 +83,16 @@ class MainApp(tk.Tk):
 
         def backToDays():
             # Remove all existing child widgets
+            for child in self.entry_frame.winfo_children():
+                child.destroy()
             for child in self.day_frame.winfo_children():
                 child.destroy()
             create_entry_frame()
 
         def page(date_id):
             # Remove all existing child widgets
+            for child in self.entry_frame.winfo_children():
+                child.destroy()
             for child in self.day_frame.winfo_children():
                 child.destroy()
 
@@ -98,6 +105,7 @@ class MainApp(tk.Tk):
 
             day_label.grid(row=0, column=0)
             date_label.grid(row=0, column=1)
+            row_idx = 0
 
             # df = pd.DataFrame(data=entries)
             # df.columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
@@ -107,35 +115,39 @@ class MainApp(tk.Tk):
             # Iterate through headers to place widgets
             columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
             for head_idx, value in enumerate(columns):
-                print(" in column header " + str(value))
                 header_label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                 header_label.grid(row=1, column=head_idx, sticky="nsew")
 
-            # Iterate through rows and columns to place widgets
-            for row_idx, row_data in enumerate(entries):
-                date_id = row_data[0]
-                print(" a day's values : " + str(date_id))
-                for col_idx, value in enumerate(row_data):
-                    # Create a Label widget for each cell
-                    label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
-                    # Place the widget in the grid
-                    label.grid(row=row_idx+2, column=col_idx, sticky="nsew")
+            if entries:
+                # Iterate through rows and columns to place widgets
+                for row_idx, row_data in enumerate(entries):
+                    date_id = row_data[0]
+                    print(" a day's values : " + str(date_id))
+                    for col_idx, value in enumerate(row_data):
+                        # Create a Label widget for each cell
+                        label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
+                        # Place the widget in the grid
+                        label.grid(row=row_idx + 2, column=col_idx, sticky="nsew")
 
-            back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue", fg="white", command=backToDays)
-            back_button.grid(row=row_idx+3, column=0, columnspan=2)
+                back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5,
+                                        bg="dark blue", fg="white", command=backToDays)
+                back_button.grid(row=row_idx + 3, column=0, columnspan=2)
+            else:
+                back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5,
+                                        bg="dark blue", fg="white", command=backToDays)
+                back_button.grid(row=3, column=0, columnspan=2)
+
 
             self.day_frame.pack()
 
 
-        frame = tk.Frame(root, background="#333333")
-
         # Create widgets
-        login_label = tkinter.Label(frame, text="Login", bg="#333333", fg="#FFFFFF", font={"Ariel", 25})
-        username_label = tkinter.Label(frame, text="Username", bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-        username_entru =tkinter.Entry(frame)
-        password_entry = tkinter.Entry(frame, show="*")
-        password_label = tkinter.Label(frame, text="Password", bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-        login_button = tkinter.Button(frame, text="Login", bg="#FF3399", command=login, font={"Ariel", 16})
+        login_label = tkinter.Label(self.frame, text="Login", bg="#333333", fg="#FFFFFF", font={"Ariel", 25})
+        username_label = tkinter.Label(self.frame, text="Username", bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+        username_entru =tkinter.Entry(self.frame)
+        password_entry = tkinter.Entry(self.frame, show="*")
+        password_label = tkinter.Label(self.frame, text="Password", bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+        login_button = tkinter.Button(self.frame, text="Login", bg="#FF3399", command=login, font={"Ariel", 16})
 
         login_label.grid(row=0, column=0, columnspan=2)
         username_label.grid(row=1, column=0)
@@ -144,7 +156,7 @@ class MainApp(tk.Tk):
         password_entry.grid(row=2, column=1)
         login_button.grid(row=3, column=0, columnspan=2)
 
-        frame.pack()
+        self.frame.pack()
 
         root.mainloop()
 
