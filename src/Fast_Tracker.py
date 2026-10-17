@@ -96,6 +96,7 @@ class MainApp(tk.Tk):
             for child in self.day_frame.winfo_children():
                 child.destroy()
 
+            day_total_calories = 0
             entries = database_driver.get_days_detail(date_id, self.current_user)
             day_data = database_driver.get_day_entry(date_id)
             print(" date_id : " + str(date_id)  + " /   day_data : " + str(day_data))
@@ -128,6 +129,7 @@ class MainApp(tk.Tk):
                         label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                         # Place the widget in the grid
                         label.grid(row=row_idx + 2, column=col_idx, sticky="nsew")
+                        if col_idx == 2: day_total_calories += int(value)
 
                 back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5,
                                         bg="dark blue", fg="white", command=backToDays)
@@ -137,7 +139,8 @@ class MainApp(tk.Tk):
                                         bg="dark blue", fg="white", command=backToDays)
                 back_button.grid(row=3, column=0, columnspan=2)
 
-
+            calories_label = tkinter.Label(self.day_frame, text='Calories: ' + str(day_total_calories), bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
+            calories_label.grid(row=0, column=2, columnspan=3)
             self.day_frame.pack()
 
 

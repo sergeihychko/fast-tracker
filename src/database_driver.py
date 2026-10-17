@@ -105,10 +105,10 @@ def create_test_days():
                 (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 4, 6, 0, 0),
                 (3, 'Monday', 1, '2026-10-12', 9, 10, 11, 7, 0, 0, 0, 0, 0),
                 (4, 'Tuesday', 1, '2026-10-13', 0, 0, 0, 0, 0, 0, 0, 0 ,0),
-                (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 18, 18, 16, 17, 0, 0),
+                (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 18, 18, 16, 17, 19, 20),
                 (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 16, 17, 16, 17, 18, 18),
                 (7, 'Friday', 1, '2026-10-16', 12, 13, 15, 16, 17, 0, 0, 0, 0),
-                (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 0, 0, 0, 0, 0)
+                (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 21, 19, 22, 0, 0)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -128,7 +128,11 @@ def create_test_days():
                 (15, 'maple bourbon salad', 1, 525, 35, 10, 7, 42),
                 (16, 'light breaded chicken', 1, 210, 14, 22, 0, 8),
                 (17, 'wheat roll', 1, 120, 25, 6, 4, 1),
-                (18, 'Ham black forest 2oz', 1, 60, 1, 9, 0, 2)
+                (18, 'Ham black forest 2oz', 1, 60, 1, 9, 0, 2),
+                (19, 'baked potato large', 1, 278, 63, 7, 7, 0),
+                (20, 'sharp cheddar 10z', 1, 110, 2, 6, 0, 9),
+                (21, 'Chicken Noodle Campbell Healthy', 1, 240, 27, 16, 3, 7),
+                (22, 'sour cream light', 1, 40, 1, 3, 0, 3)
             ]
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
