@@ -101,13 +101,13 @@ def create_test_days():
             cursor = conn.cursor()
 
             days_data = [
-                (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 4, 5, 6, 0),
-                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 4, 6),
-                (3, 'Monday', 1, '2026-10-12', 9, 10, 11, 7, 0, 0, 0),
-                (4, 'Tuesday', 1, '2026-10-13', 0, 0, 0, 0, 0, 0, 0),
-                (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 0, 0, 0, 0),
-                (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 16, 17, 16, 17),
-                (6, 'Friday', 1, '2026-10-16', 12, 13, 15, 0, 0, 0, 0)
+                (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 4, 5, 6, 0, 0, 0),
+                (2, 'Sunday', 1, '2026-10-11', 1 , 2, 7, 8, 9, 4, 6, 0, 0),
+                (3, 'Monday', 1, '2026-10-12', 9, 10, 11, 7, 0, 0, 0, 0, 0),
+                (4, 'Tuesday', 1, '2026-10-13', 0, 0, 0, 0, 0, 0, 0, 0 ,0),
+                (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 0, 0, 0, 0, 0, 0),
+                (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 16, 17, 16, 17, 18, 18),
+                (7, 'Friday', 1, '2026-10-16', 12, 13, 15, 0, 0, 0, 0, 0, 0)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -126,9 +126,10 @@ def create_test_days():
                 (14, 'banana', 1, 121, 1, 31, 4, 0),
                 (15, 'maple bourbon salad', 1, 525, 35, 10, 7, 42),
                 (16, 'light breaded chicken', 1, 210, 14, 22, 0, 8),
-                (17, 'wheat roll', 1, 120, 25, 6, 4, 1)
+                (17, 'wheat roll', 1, 120, 25, 6, 4, 1),
+                (18, 'Ham black forest 2oz', 1, 60, 1, 9, 0, 2)
             ]
-            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3, entry4, entry5, entry6, entry7) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
+            cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
 
             # commit the changes
@@ -200,11 +201,12 @@ def get_days_detail(day_id, user_id):
             # create a cursor
             cursor = conn.cursor()
 
+            #TODO: Rewrite select to a union all instead of an IN stateemnt - it will not pick up when the same f.id is in more than one day entry
             # Parameterized query using ? placeholder
             query_statement = """
-                SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat            
+                SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat, d.id            
                 FROM foodstuffs f, days d
-                WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7) AND d.id = ?;
+                WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7, entry8, entry9) AND d.id = ?;
             """
 
             cursor.execute(query_statement, str(day_id))
