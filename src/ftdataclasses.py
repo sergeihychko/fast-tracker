@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from sqlalchemy import Column, Integer, String, DATE
+from sqlalchemy import Column, Integer, String, DATE, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -70,7 +70,7 @@ class Day(Base):
 
 
 @dataclass
-class Day(Base):
+class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     user_name = Column(String)
@@ -83,3 +83,14 @@ class Day(Base):
         self.user_name = user_name
         self.email = email
         self.password = password
+
+@dataclass
+class Meal(Base):
+    __tablename__ = 'meals'
+    id = Column(Integer, primary_key=True)
+    foodstuff_id = Column(Integer, ForeignKey('foodstuffs.id'))
+
+    def _init__(self, id, foodstuff_id):
+        self.id = id
+        self.foodstuff_id = foodstuff_id
+
