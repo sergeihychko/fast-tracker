@@ -140,7 +140,7 @@ class MainApp(tk.Tk):
                 back_button.grid(row=3, column=0, columnspan=2)
 
             calories_label = tkinter.Label(self.day_frame, text='Calories: ' + str(day_total_calories), bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-            calories_label.grid(row=0, column=2, columnspan=3)
+            calories_label.grid(row=0, column=2, columnspan=3       )
             self.day_frame.pack()
 
 

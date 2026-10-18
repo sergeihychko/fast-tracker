@@ -108,7 +108,7 @@ def create_test_days():
                 (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 18, 18, 16, 17, 19, 20),
                 (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 16, 17, 16, 17, 18, 18),
                 (7, 'Friday', 1, '2026-10-16', 12, 13, 15, 16, 17, 0, 0, 0, 0),
-                (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 21, 19, 22, 0, 0)
+                (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 21, 19, 22, 23, 24)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -132,7 +132,9 @@ def create_test_days():
                 (19, 'baked potato large', 1, 278, 63, 7, 7, 0),
                 (20, 'sharp cheddar 10z', 1, 110, 2, 6, 0, 9),
                 (21, 'Chicken Noodle Campbell Healthy', 1, 240, 27, 16, 3, 7),
-                (22, 'sour cream light', 1, 40, 1, 3, 0, 3)
+                (22, 'sour cream light', 1, 40, 1, 3, 0, 3),
+                (23, 'wheat bagel', 1, 220, 45, 10, 6, 1),
+                (24, 'cream cheese light', 1, 60, 2, 2, 0, 5)
             ]
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, protein, carbs, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
@@ -211,7 +213,24 @@ def get_days_detail(day_id, user_id):
             query_statement = """
                 SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat, d.id            
                 FROM foodstuffs f, days d
-                WHERE f.id IN(d.entry1, d.entry2, d.entry3, d.entry4, d.entry5, d.entry6, d.entry7, entry8, entry9) AND d.id = ?;
+                WHERE 
+                    d.id = ? AND (f.id = d.entry1
+                    OR
+                    f.id = d.entry2
+                    OR
+                    f.id = d.entry3
+                    OR
+                    f.id = d.entry4
+                    OR
+                    f.id = d.entry5
+                    OR
+                    f.id = d.entry6
+                    OR
+                    f.id = d.entry7
+                    OR
+                    f.id = d.entry8
+                    OR
+                    f.id = d.entry9);
             """
 
             cursor.execute(query_statement, str(day_id))
