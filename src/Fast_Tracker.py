@@ -68,7 +68,6 @@ class MainApp(tk.Tk):
             # Iterate through rows and columns to place widgets
             for row_idx, row_data in enumerate(data):
                 date_id = row_data[0]
-                print(" a day's values : " + str(date_id))
                 for col_idx, value in enumerate(row_data):
                     # Create a Label widget for each cell
                     label = tk.Label(self.entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
@@ -97,8 +96,8 @@ class MainApp(tk.Tk):
                 child.destroy()
 
             day_total_calories = 0
-            entries = database_driver.get_days_detail(date_id, self.current_user)
             day_data = database_driver.get_day_entry(date_id)
+            entries = database_driver.get_days_detail(date_id)
             print(" date_id : " + str(date_id)  + " /   day_data : " + str(day_data))
 
             day_label = tkinter.Label(self.day_frame, text=day_data[1], bg="#333333", fg="#FFFFFF", font={"Ariel", 16})

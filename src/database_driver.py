@@ -16,11 +16,11 @@ def init():
                 name text NOT NULL, 
                 user_id INTEGER NOT NULL, 
                 actual_date DATE,
-                meal1 text,
-                meal2 text,
-                meal3 text,
-                meal4 text,
-                meal5 text,
+                meal1 INT,
+                meal2 INT,
+                meal3 INT,
+                meal4 INT,
+                meal5 INT,
                 FOREIGN KEY (meal1) REFERENCES foodstuffs (id),
                 FOREIGN KEY (meal2) REFERENCES foodstuffs (id),
                 FOREIGN KEY (meal3) REFERENCES foodstuffs (id),
@@ -92,19 +92,23 @@ def create_test_days():
             # create a cursor
             cursor = conn.cursor()
 
-            #     (4, 'Tuesday', 1, '2026-10-13', 0, 0, 0, 0, 0, 0, 0, 0 ,0),
-            #     (5, 'Wednesday', 1, '2026-10-14', 12, 13, 14, 18, 18, 16, 17, 19, 20),
-            #     (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 16, 17, 16, 17, 18, 18),
-            #     (7, 'Friday', 1, '2026-10-16', 12, 13, 15, 16, 17, 0, 0, 0, 0),
             #     (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 21, 19, 22, 23, 24),
-            #     (9, 'Sunday', 1, '2026-10-18', 1, 2, 23, 24, 0, 0, 0, 0, 0),
+            #     (9, 'Sunday', 1, '2026-10-18', 1, 2, 23, 24, 9, 12, 0, 0, 0),
             #     (10, 'Monday', 1, '2026-10-19', 25, 26, 27, 24, 0, 0, 0, 0, 0)
             # ]
 
             days_data = [
                 (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 0, 0),
                 (2, 'Sunday', 1, '2026-10-11', 4, 5, 6, 0, 0),
-                (3, 'Monday', 1, '2026-10-12', 7, 8, 0, 0, 0)
+                (3, 'Monday', 1, '2026-10-12', 7, 8, 0, 0, 0),
+                (4, 'Tuesday', 1, '2026-10-13', 0, 0, 0, 0, 0),
+                (5, 'Wednesday', 1, '2026-10-14', 9, 10, 11, 0, 0),
+                (6, 'Thursday', 1, '2026-10-15', 12, 13, 14, 0, 0),
+                (7, 'Friday', 1, '2026-10-16', 15, 16, 0, 0, 0),
+                (8, 'Saturday', 1, '2026-10-17', 17, 18, 19, 20, 0),
+                (9, 'Sunday', 1, '2026-10-18', 21, 22, 23, 0, 0),
+                (10, 'Monday', 1, '2026-10-19', 24, 25, 26, 0, 0),
+                (11, 'Tuesday', 1, '2026-10-20', 0, 0, 0, 0, 0)
             ]
             #TODO finish converting the day's entries into meal entries.
             meals_data = [
@@ -124,7 +128,49 @@ def create_test_days():
                 (7, 9),
                 (7, 10),
                 (7, 11),
-                (8, 7)
+                (8, 7),
+                (9, 12),
+                (9, 13),
+                (9, 14),
+                (10, 18),
+                (10, 18),
+                (10, 16),
+                (10, 17),
+                (11, 19),
+                (11, 20),
+                (12, 12),
+                (12, 13),
+                (12, 14),
+                (13, 16),
+                (13, 17),
+                (13, 16),
+                (13, 17),
+                (14, 18),
+                (14, 18),
+                (15, 12),
+                (15, 13),
+                (16, 15),
+                (16, 16),
+                (16, 17),
+                (17, 12),
+                (17, 13),
+                (18, 16),
+                (18, 17),
+                (19, 21),
+                (19, 19),
+                (20, 22),
+                (20, 23),
+                (20, 24),
+                (21, 1),
+                (21, 2),
+                (22, 23),
+                (22, 24),
+                (23, 9),
+                (23, 12),
+                (24, 25),
+                (25, 26),
+                (25, 27),
+                (26, 24)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -189,13 +235,14 @@ def check_login(username, password):
 
 def get_day_entry(day_id):
     # create a database connection
+    val1 = str(day_id)
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
             # create a cursor
             cursor = conn.cursor()
 
             # Parameterized query using ? placeholder
-            cursor.execute("SELECT * FROM days WHERE days.id = ?", (day_id, ))
+            cursor.execute("SELECT * FROM days WHERE days.id = ?", (val1, ))
             rows = cursor.fetchone()
             if rows:
                 #print("get_day_entry : " + str(rows))
@@ -222,8 +269,9 @@ def get_user_data(user_id):
         print("Error finding user:", e)
 
 
-def get_days_detail(day_id, user_id):
+def get_days_detail(day_id):
     # create a database connection
+    val1 = str(day_id)
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
             # create a cursor
@@ -239,8 +287,8 @@ def get_days_detail(day_id, user_id):
                 WHERE 
                     d.id = ? AND (f.id = m.foodstuff_id);
             """
-
-            cursor.execute(query_statement, str(day_id))
+            print("calling cursor with : " + str(val1))
+            cursor.execute(query_statement, (val1, ))
 
             rows = cursor.fetchall()
             if rows:
