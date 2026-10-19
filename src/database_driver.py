@@ -92,11 +92,6 @@ def create_test_days():
             # create a cursor
             cursor = conn.cursor()
 
-            #     (8, 'Saturday', 1, '2026-10-17', 12, 13, 16, 17, 21, 19, 22, 23, 24),
-            #     (9, 'Sunday', 1, '2026-10-18', 1, 2, 23, 24, 9, 12, 0, 0, 0),
-            #     (10, 'Monday', 1, '2026-10-19', 25, 26, 27, 24, 0, 0, 0, 0, 0)
-            # ]
-
             days_data = [
                 (1, 'Saturday', 1, '2026-10-10', 1 ,2 ,3, 0, 0),
                 (2, 'Sunday', 1, '2026-10-11', 4, 5, 6, 0, 0),
@@ -110,7 +105,6 @@ def create_test_days():
                 (10, 'Monday', 1, '2026-10-19', 24, 25, 26, 0, 0),
                 (11, 'Tuesday', 1, '2026-10-20', 0, 0, 0, 0, 0)
             ]
-            #TODO finish converting the day's entries into meal entries.
             meals_data = [
                 (1, 1),
                 (1, 2),
@@ -277,7 +271,6 @@ def get_days_detail(day_id):
             # create a cursor
             cursor = conn.cursor()
 
-            #TODO: Rewrite select to a union all instead of an IN stateemnt - it will not pick up when the same f.id is in more than one day entry
             # Parameterized query using ? placeholder
             query_statement = """
                 SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat, d.id         
