@@ -23,6 +23,29 @@ class MainApp(tk.Tk):
         # root.geometry("340x440")
         root.configure(background="#333333")
 
+        # 1. Create the main menu bar
+        menubar = tk.Menu(root)
+        root.config(menu=menubar)
+
+        # 2. Create a 'Entry' submenu
+        entry_menu = tk.Menu(menubar, tearoff=0)
+        entry_menu.add_command(label="New", command=lambda: print("New Day"))
+        entry_menu.add_command(label="Open", command=lambda: print("New Meal"))
+        entry_menu.add_command(label="Open", command=lambda: print("New Food item"))
+        entry_menu.add_separator()
+        entry_menu.add_command(label="Exit", command=root.quit)
+
+        # 2. Create a 'Login/Out' submenu
+        logout_menu = tk.Menu(menubar, tearoff=0)
+        logout_menu.add_command(label="Logout", command=lambda: print("Logout"))
+        logout_menu.add_separator()
+        logout_menu.add_command(label="Exit", command=root.quit)
+
+        # 3. Add the submenu to the menu bar
+        menubar.add_cascade(label="Entry", menu=entry_menu)
+        menubar.add_cascade(label="User", menu=logout_menu)
+
+
         # Initialize global user data container in the controller
         self.current_user = 0
         self.current_day = 0
