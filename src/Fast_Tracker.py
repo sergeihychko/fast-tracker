@@ -82,6 +82,8 @@ class MainApp(tk.Tk):
         def create_entry_frame():
             self.frame.pack_forget()
             # Remove all existing child widgets
+            self.frame.pack_forget()
+            self.entry_frame.pack_forget()
             for child in self.frame.winfo_children():
                 child.destroy()
             for child in self.entry_frame.winfo_children():
@@ -105,6 +107,8 @@ class MainApp(tk.Tk):
 
         def backToDays():
             # Remove all existing child widgets
+            self.entry_frame.pack_forget()
+            self.day_frame.pack_forget()
             for child in self.entry_frame.winfo_children():
                 child.destroy()
             for child in self.day_frame.winfo_children():
@@ -113,6 +117,8 @@ class MainApp(tk.Tk):
 
         def page(date_id):
             # Remove all existing child widgets
+            self.entry_frame.pack_forget()
+            self.day_frame.pack_forget()
             for child in self.entry_frame.winfo_children():
                 child.destroy()
             for child in self.day_frame.winfo_children():
