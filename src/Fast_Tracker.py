@@ -3,8 +3,6 @@ import tkinter
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from pandastable import Table, TableModel
-import pandas as pd
 import ftdataclasses
 
 from pywin.dialogs import login
@@ -48,6 +46,7 @@ class MainApp(tk.Tk):
 
 
         # Initialize global user data container in the controller
+        self.root = root
         self.current_user = 0
         self.current_day = 0
         self.frame = tk.Frame(root, background="#333333")
@@ -55,7 +54,6 @@ class MainApp(tk.Tk):
         self.day_frame = tk.Frame(root, background="#333333")
         self.edit_d_frame = tk.Frame(root, background="#333333")
         self.edit_fs_frame = tk.Frame(root, background="#333333")
-        self.edit_meal_frame = tk.Frame(root, background="#333333")
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -140,12 +138,6 @@ class MainApp(tk.Tk):
             date_label.grid(row=0, column=1)
             row_idx = 0
 
-            # df = pd.DataFrame(data=entries)
-            # df.columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
-            #
-            # pt = Table(day_frame, dataframe=df, showtoolbar=False, showstatusbar=False)
-            # pt.show()
-            # Iterate through headers to place widgets
             columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
             for head_idx, value in enumerate(columns):
                 header_label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
@@ -188,10 +180,15 @@ class MainApp(tk.Tk):
             self.edit_fs_frame.pack()
 
         def edit_meal():
-            self.edit_meal_frame.pack_forget()
-            for child in self.edit_meal_frame.winfo_children():
-                child.destroy()
-            self.edit_meal_frame.pack()
+            result = {"data": None}
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root)
+            popup.title("Enter Data")
+            popup.geometry("400x350")
+
+            self.edit_meal_frame = tk.Frame(popup, background="#333333")
+
             fields = ('Meal ID', 'Food_ID')
             entries = {}
 
@@ -207,11 +204,25 @@ class MainApp(tk.Tk):
                 # Header
                 tk.Label(self.edit_meal_frame, text=field.title()).grid(row=idx, column=0, sticky='w')
                 # Input Box
-                e = tk.Entry(root)
+                e = tk.Entry(self.edit_meal_frame)
                 e.grid(row=idx, column=1)
                 entries[field] = e
 
-            tk.Button(self.edit_meal_frame, text="Submit", command=submit_data).grid(row=len(fields), column=1)
+            def submit_data():
+                result["data"] = None #entry.get()
+                popup.destroy()
+
+            def cancel():
+                result["data"] = None
+                self.edit_meal_frame.pack_forget()
+                for child in self.edit_meal_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command=submit_data).grid(row=2, column=0, padx=5)
+            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=2, column=1, padx=5)
+
+            self.edit_meal_frame.pack()
 
         # Create widgets
         login_label = tkinter.Label(self.frame, text="Login", bg="#333333", fg="#FFFFFF", font={"Ariel", 25})
