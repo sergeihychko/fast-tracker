@@ -5,6 +5,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from pandastable import Table, TableModel
 import pandas as pd
+import ftdataclasses
 
 from pywin.dialogs import login
 
@@ -29,8 +30,8 @@ class MainApp(tk.Tk):
 
         # 2. Create a 'Entry' submenu
         entry_menu = tk.Menu(menubar, tearoff=0)
-        entry_menu.add_command(label="New Food", command=lambda: print("New "))
-        entry_menu.add_command(label="Open", command=lambda: edit_meal())
+        entry_menu.add_command(label="Edit Day", command=lambda: edit_day())
+        entry_menu.add_command(label="New Meal", command=lambda: edit_meal())
         entry_menu.add_command(label="New Food", command=lambda: edit_foodstuff())
         entry_menu.add_separator()
         entry_menu.add_command(label="Exit", command=root.quit)
@@ -52,6 +53,7 @@ class MainApp(tk.Tk):
         self.frame = tk.Frame(root, background="#333333")
         self.entry_frame = tk.Frame(root, background="#333333")
         self.day_frame = tk.Frame(root, background="#333333")
+        self.edit_d_frame = tk.Frame(root, background="#333333")
         self.edit_fs_frame = tk.Frame(root, background="#333333")
         self.edit_meal_frame = tk.Frame(root, background="#333333")
 
@@ -173,6 +175,12 @@ class MainApp(tk.Tk):
             calories_label.grid(row=0, column=2, columnspan=3       )
             self.day_frame.pack()
 
+        def edit_day():
+            self.edit_d_frame.pack_forget()
+            for child in self.edit_d_frame.winfo_children():
+                child.destroy()
+            self.edit_d_frame.pack()
+
         def edit_foodstuff():
             self.edit_fs_frame.pack_forget()
             for child in self.edit_fs_frame.winfo_children():
@@ -184,6 +192,26 @@ class MainApp(tk.Tk):
             for child in self.edit_meal_frame.winfo_children():
                 child.destroy()
             self.edit_meal_frame.pack()
+            fields = ('Meal ID', 'Food_ID')
+            entries = {}
+
+            def submit_data():
+                # Retrieve values from Entry widgets
+                meal = ftdataclasses.Meal(
+                    id=entries['id'].get(),
+                    name=entries['name'].get()
+                )
+                print(f"Created: {meal}")
+
+            for idx, field in enumerate(fields):
+                # Header
+                tk.Label(self.edit_meal_frame, text=field.title()).grid(row=idx, column=0, sticky='w')
+                # Input Box
+                e = tk.Entry(root)
+                e.grid(row=idx, column=1)
+                entries[field] = e
+
+            tk.Button(self.edit_meal_frame, text="Submit", command=submit_data).grid(row=len(fields), column=1)
 
         # Create widgets
         login_label = tkinter.Label(self.frame, text="Login", bg="#333333", fg="#FFFFFF", font={"Ariel", 25})
