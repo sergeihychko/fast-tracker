@@ -374,3 +374,20 @@ def insert_meal(meal):
             print(f"Inserted Meal ID: {meal.id}")
     except sqlite3.OperationalError as e:
         print("Error inserting into Meals table")
+
+def insert_foodstuff(foodstuff):
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            cursor = conn.cursor()
+
+            # Insert single row
+            cursor.execute(
+                "INSERT INTO foodstuffs (id, description, serving, calories, carbs, protein, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (foodstuff.id, foodstuff.description, foodstuff.serving_size, foodstuff.calories, foodstuff.carbs, foodstuff.protein, foodstuff.fiber, foodstuff.fat),
+            )
+            conn.commit()
+            cursor.close()
+            #conn.close()
+            print(f"Inserted Meal ID: {foodstuff.id}")
+    except sqlite3.OperationalError as e:
+        print("Error inserting into Foodstuffs table")

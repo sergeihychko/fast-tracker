@@ -239,7 +239,7 @@ class MainApp(tk.Tk):
             entry_foodstuff_fat.grid(row=8, column=1, sticky='w')
 
             def submit_data(foodstuff_id, foodstuff_desc, serving, calories, carbs, protein, fiber, fat):
-                foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving=serving, calories=calories, carbs=carbs, protein=protein, fiber=fiber, fat=fat)
+                foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving_size=serving, calories=calories, carbs=carbs, protein=protein, fiber=fiber, fat=fat)
                 print("submit_data with foodstuff id : " + str(foodstuff.id) + " f_id :  " + str(foodstuff.description))
                 #TODO: actually call the database insert method
                 #db_update = database_driver.insert_meal(meal)
