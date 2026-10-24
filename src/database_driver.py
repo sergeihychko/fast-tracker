@@ -344,16 +344,17 @@ def find_next_id(table_name):
 
             # Query the table to find the last used ID
             #cursor.execute("SELECT * FROM ? ORDER BY id DESC LIMIT 1;", (table_name, ))
-            query = f"SELECT * FROM {table_name} WHERE id = (SELECT MAX(id) FROM {table_name})"
+            #query = f"SELECT * FROM {table_name} WHERE id = (SELECT MAX(id) FROM {table_name})"
+            query = f"SELECT MAX(id) FROM {table_name}"
             cursor.execute(query)
-            highest_id = cursor.fetchone()[0]
-            result = cursor.fetchone()
+            max_id = cursor.fetchone()[0]
 
-            if result and result[0] is not None:
-                next_id = result[0] + 1
+            if max_id is not None:
+                next_id = max_id + 1
+                print(f"Next sequential ID: {next_id}")
             else:
                 next_id = 1  # Default if table is empty or has no autoincrement history
-            print(f"Next sequential ID: {next_id}")
+                print(f"Next sequential NOT FOUND for table {table_name}")
             return next_id
     except sqlite3.OperationalError as e:
         print("Error finding next ID sequence : " + str(e))

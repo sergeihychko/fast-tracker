@@ -242,7 +242,7 @@ class MainApp(tk.Tk):
                 foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving_size=serving, calories=calories, carbs=carbs, protein=protein, fiber=fiber, fat=fat)
                 print("submit_data with foodstuff id : " + str(foodstuff.id) + " f_id :  " + str(foodstuff.description))
                 #TODO: actually call the database insert method
-                #db_update = database_driver.insert_meal(meal)
+                db_update = database_driver.insert_foodstuff(foodstuff)
                 print(f"Created: {foodstuff}")
                 messagebox.showinfo("Created: Inserted into Foodstuffs table")
                 popup.destroy()
@@ -253,9 +253,14 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.edit_fs_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_foodstuffs_id.get(), entry_foodstuff_desc.get(), entry_foodstuffs_serving.get(), entry_foodstuff_calories.get(), entry_foodstuffs_carbs, entry_foodstuff_protein.get(), entry_foodstuffs_fiber.get(), entry_foodstuffs_fiber.get())).grid(row=9,
-                                                                                                                 column=0,
-                                                                                                                 padx=5)
+            tk.Button(self.edit_fs_frame, text="Submit", bg="#333333", fg="#FFFFFF",
+                      command=lambda: submit_data(entry_foodstuffs_id.get(), entry_foodstuff_desc.get(),
+                                                  entry_foodstuffs_serving.get(), entry_foodstuff_calories.get(),
+                                                  entry_foodstuffs_carbs.get(), entry_foodstuff_protein.get(),
+                                                  entry_foodstuffs_fiber.get(), entry_foodstuffs_fiber.get())).grid(
+                row=9,
+                column=0,
+                padx=5)
             tk.Button(self.edit_fs_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=9,
                                                                                                             column=1,
                                                                                                             padx=5)
