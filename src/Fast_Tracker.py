@@ -181,8 +181,9 @@ class MainApp(tk.Tk):
 
         def edit_meal():
             result = {"data": None}
-            next_meal_id = database_driver.find_next_meal_id()
+            next_meal_id = database_driver.find_next_id("meals")
             meal = ftdataclasses.Meal(id=next_meal_id, foodstuff_id=0)
+            print("meal object: " + str(meal.id) + " : " + str(meal.foodstuff_id))
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -195,9 +196,9 @@ class MainApp(tk.Tk):
             entries = {next_meal_id, 0}
 
             meal_id_label = tk.Label(self.edit_meal_frame, text=fields[0]).grid(row=1, column=0, sticky='w')
-            entry_meal_id = tk.Entry(self.edit_meal_frame, text=meal.id)
+            entry_meal_id = tk.Entry(self.edit_meal_frame, text=meal.id).grid(row=1, column=1, sticky='w')
             meal_foodstuff_label= tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
-            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, text=meal.foodstuff_id)
+            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, text=meal.foodstuff_id).grid(row=2, column=1, sticky='w')
 
             def submit_data(meal):
                 print("submit_data with meal id : " + str(meal.id) + " f_id :  " + str(meal.foodstuff_id))

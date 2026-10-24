@@ -327,14 +327,16 @@ def get_days_detail(day_id):
     except sqlite3.OperationalError as e:
         print("Error finding foodstuffs for day entry:", e)
 
-def find_next_meal_id():
+def find_next_id(table_name):
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
             cursor = conn.cursor()
 
-            table_name = 'meals'
-            # Query the sequence table to find the last used ID
-            cursor.execute(f"SELECT seq FROM sqlite_sequence WHERE name = ?", (table_name,))
+            # Query the table to find the last used ID
+            #cursor.execute("SELECT * FROM ? ORDER BY id DESC LIMIT 1;", (table_name, ))
+            query = f"SELECT * FROM {table_name} WHERE id = (SELECT MAX(id) FROM {table_name})"
+            cursor.execute(query)
+            highest_id = cursor.fetchone()[0]
             result = cursor.fetchone()
 
             if result and result[0] is not None:
@@ -344,7 +346,7 @@ def find_next_meal_id():
             print(f"Next sequential ID: {next_id}")
             return next_id
     except sqlite3.OperationalError as e:
-        print("Error finding next Meal ID")
+        print("Error finding next ID sequence : " + str(e))
 
 def insert_meal(meal_id, foodstuff_id):
     try:
