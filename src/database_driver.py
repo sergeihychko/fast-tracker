@@ -105,7 +105,9 @@ def create_test_days():
                 (10, 'Monday', 1, '2026-10-19', 24, 25, 26, 0, 0),
                 (11, 'Tuesday', 1, '2026-10-20', 27, 28, 29, 0, 0),
                 (12, 'Wednesday', 1, '2026-10-21', 30, 31, 0, 0, 0),
-                (13, 'Thursday', 1, '2026-10-22', 32, 33, 0, 0, 0)
+                (13, 'Thursday', 1, '2026-10-22', 32, 33, 0, 0, 0),
+                (14, 'Friday', 1, '2026-10-23', 34, 35, 0, 0, 0),
+                (15, 'Saturday', 1, '2026-10-24', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -183,7 +185,11 @@ def create_test_days():
                 (32, 24),
                 (33, 31),
                 (33, 32),
-                (33, 32)
+                (33, 32),
+                (34, 32),
+                (34, 33),
+                (35, 26),
+                (35, 5)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -217,7 +223,8 @@ def create_test_days():
                 (29, 'albacore plus light mayo', 1, 140, 4, 22, 0, 4),
                 (30, 'Progresso brocolli cheese', 1, 230, 21, 9, 2, 12),
                 (31, 'Momofuku Spicy Soy Ramen', 1, 320, 63, 11, 2, 1),
-                (32, 'vanilla greek yogurt', 1, 140, 19, 15, 0, 0)
+                (32, 'vanilla greek yogurt', 1, 140, 19, 15, 0, 0),
+                (33, 'Chicken Noodle Amazon - traditional', 1, 200, 25, 13, 3, 5)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
@@ -320,37 +327,38 @@ def get_days_detail(day_id):
     except sqlite3.OperationalError as e:
         print("Error finding foodstuffs for day entry:", e)
 
-    def find_next_meal_id():
-        try:
-            with sqlite3.connect('../data/fast-tracker.db') as conn:
-                cursor = conn.cursor()
+def find_next_meal_id():
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            cursor = conn.cursor()
 
-                table_name = 'meals'
-                # Query the sequence table to find the last used ID
-                cursor.execute(f"SELECT seq FROM sqlite_sequence WHERE name = ?", (table_name,))
-                result = cursor.fetchone()
+            table_name = 'meals'
+            # Query the sequence table to find the last used ID
+            cursor.execute(f"SELECT seq FROM sqlite_sequence WHERE name = ?", (table_name,))
+            result = cursor.fetchone()
 
-                if result and result[0] is not None:
-                    next_id = result[0] + 1
-                else:
-                    next_id = 1  # Default if table is empty or has no autoincrement history
-                print(f"Next sequential ID: {next_id}")
-        except sqlite3.OperationalError as e:
-            print("Error finding next Meal ID")
+            if result and result[0] is not None:
+                next_id = result[0] + 1
+            else:
+                next_id = 1  # Default if table is empty or has no autoincrement history
+            print(f"Next sequential ID: {next_id}")
+            return next_id
+    except sqlite3.OperationalError as e:
+        print("Error finding next Meal ID")
 
-    def insert_meal(meal_id, foodstuff_id):
-        try:
-            with sqlite3.connect('../data/fast-tracker.db') as conn:
-                cursor = conn.cursor()
+def insert_meal(meal_id, foodstuff_id):
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            cursor = conn.cursor()
 
-                # Insert single row
-                cursor.execute(
-                    "INSERT INTO meals (id, foodstuff_id) VALUES (?, ?)",
-                    (meal_id, foodstuff_id),
-                )
-                conn.commit()
-                cursor.close()
-                conn.close()
-                print(f"Inserted Meal ID: {meal_id}")
-        except sqlite3.OperationalError as e:
-            print("Error inserting into Meals table")
+            # Insert single row
+            cursor.execute(
+                "INSERT INTO meals (id, foodstuff_id) VALUES (?, ?)",
+                (meal_id, foodstuff_id),
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            print(f"Inserted Meal ID: {meal_id}")
+    except sqlite3.OperationalError as e:
+        print("Error inserting into Meals table")
