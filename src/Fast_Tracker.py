@@ -198,7 +198,7 @@ class MainApp(tk.Tk):
                 child.destroy()
             self.edit_fs_frame.pack()
             next_foodstuff_id = database_driver.find_next_id("foodstuffs")
-            serving = 1
+            defualt_serving = 1
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -207,41 +207,59 @@ class MainApp(tk.Tk):
 
             self.edit_fs_frame = tk.Frame(popup, background="#333333")
 
-            fields = ('Food_ID', 'Description', 'Serving', 'Carbs', 'Proetin', 'Fiber', 'Fat')
+            fields = ('Food_ID', 'Description', 'Serving', 'Calories', 'Carbs', 'Protein', 'Fiber', 'Fat')
 
-            foodstuffs_id_label = tk.Label(self.edit_fs_frame, text=fields[0]).grid(row=1, column=0, sticky='w')
+            foodstuffs_id_label = tk.Label(self.edit_fs_frame, text=fields[0]).grid(row=1, column=0, sticky='e')
             entry_foodstuffs_id = tk.Entry(self.edit_fs_frame, width=10)
             entry_foodstuffs_id.insert(0, str(next_foodstuff_id))
             entry_foodstuffs_id.config(state="readonly")
             entry_foodstuffs_id.grid(row=1, column=1, sticky='w')
-            foodstuff_desc_label= tk.Label(self.edit_fs_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
+            foodstuff_desc_label= tk.Label(self.edit_fs_frame, text=fields[1]).grid(row=2, column=0, sticky='e')
             entry_foodstuff_desc = tk.Entry(self.edit_fs_frame, width=10)
-            entry_foodstuff_desc.insert(0, 0)
             entry_foodstuff_desc.grid(row=2, column=1, sticky='w')
+            foodstuffs_serving_label = tk.Label(self.edit_fs_frame, text=fields[2]).grid(row=3, column=0, sticky='e')
+            entry_foodstuffs_serving = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuffs_serving.insert(0, str(defualt_serving))
+            entry_foodstuffs_serving.config(state="readonly")
+            entry_foodstuffs_serving.grid(row=3, column=1, sticky='w')
+            foodstuff_calories_label = tk.Label(self.edit_fs_frame, text=fields[3]).grid(row=4, column=0, sticky='e')
+            entry_foodstuff_calories = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuff_calories.grid(row=4, column=1, sticky='w')
+            foodstuffs_carbs_label = tk.Label(self.edit_fs_frame, text=fields[4]).grid(row=5, column=0, sticky='e')
+            entry_foodstuffs_carbs = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuffs_carbs.grid(row=5, column=1, sticky='w')
+            foodstuff_protein_label = tk.Label(self.edit_fs_frame, text=fields[5]).grid(row=6, column=0, sticky='e')
+            entry_foodstuff_protein = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuff_protein.grid(row=6, column=1, sticky='w')
+            foodstuffs_fiber_label = tk.Label(self.edit_fs_frame, text=fields[6]).grid(row=7, column=0, sticky='e')
+            entry_foodstuffs_fiber = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuffs_fiber.grid(row=7, column=1, sticky='w')
+            foodstuff_fat_label = tk.Label(self.edit_fs_frame, text=fields[7]).grid(row=8, column=0, sticky='e')
+            entry_foodstuff_fat = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuff_fat.grid(row=8, column=1, sticky='w')
 
-            def submit_data(foodstuff_id, foodstuff_desc, serving):
-                foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving=serving)
-                print("submit_data with meal id : " + str(foodstuff.id) + " f_id :  " + str(foodstuff.description))
+            def submit_data(foodstuff_id, foodstuff_desc, serving, calories, carbs, protein, fiber, fat):
+                foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving=serving, calories=calories, carbs=carbs, protein=protein, fiber=fiber, fat=fat)
+                print("submit_data with foodstuff id : " + str(foodstuff.id) + " f_id :  " + str(foodstuff.description))
                 #TODO: actually call the database insert method
                 #db_update = database_driver.insert_meal(meal)
                 print(f"Created: {foodstuff}")
-                messagebox.showinfo("Created: Inserted into Meal table")
+                messagebox.showinfo("Created: Inserted into Foodstuffs table")
                 popup.destroy()
 
             def cancel():
-                self.edit_meal_frame.pack_forget()
-                for child in self.edit_meal_frame.winfo_children():
+                self.edit_fs_frame.pack_forget()
+                for child in self.edit_fs_frame.winfo_children():
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_foodstuffs_id.get(), entry_foodstuff_desc.get())).grid(row=3,
+            tk.Button(self.edit_fs_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_foodstuffs_id.get(), entry_foodstuff_desc.get(), entry_foodstuffs_serving.get(), entry_foodstuff_calories.get(), entry_foodstuffs_carbs, entry_foodstuff_protein.get(), entry_foodstuffs_fiber.get(), entry_foodstuffs_fiber.get())).grid(row=9,
                                                                                                                  column=0,
                                                                                                                  padx=5)
-            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+            tk.Button(self.edit_fs_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=9,
                                                                                                             column=1,
                                                                                                             padx=5)
-
-            self.edit_meal_frame.pack()
+            self.edit_fs_frame.pack()
 
         def edit_meal():
             next_meal_id = database_driver.find_next_id("meals")

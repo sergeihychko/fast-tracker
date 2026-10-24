@@ -17,13 +17,13 @@ class Foodstuff(Base):
     fiber = Column(Integer)
     fat = Column(Integer)
 
-    def _init__(self, id, description, serving_size, calories, protein, carbs, fiber, fat):
+    def _init__(self, id, description, serving_size, calories, carbs, protein, fiber, fat):
         self.id = id
         self.description = description
         self.serving_size = serving_size
         self.calories = calories
-        self.protein = protein
         self.carbs = carbs
+        self.protein = protein
         self.fiber = fiber
         self.fat = fat
 
