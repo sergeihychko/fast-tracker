@@ -127,6 +127,10 @@ class MainApp(tk.Tk):
                 child.destroy()
 
             day_total_calories = 0
+            day_total_carbs = 0
+            day_total_protein = 0
+            day_total_fiber = 0
+            day_total_fat = 0
             day_data = database_driver.get_day_entry(date_id)
             entries = database_driver.get_days_detail(date_id)
             print(" date_id : " + str(date_id)  + " /   day_data : " + str(day_data))
@@ -154,17 +158,32 @@ class MainApp(tk.Tk):
                         # Place the widget in the grid
                         label.grid(row=row_idx + 2, column=col_idx, sticky="nsew")
                         if col_idx == 2: day_total_calories += int(value)
+                        if col_idx == 3: day_total_carbs += int(value)
+                        if col_idx == 4: day_total_protein += int(value)
+                        if col_idx == 5: day_total_fiber += int(value)
+                        if col_idx == 5: day_total_fat += int(value)
 
                 back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5,
                                         bg="dark blue", fg="white", command=backToDays)
-                back_button.grid(row=row_idx + 3, column=0, columnspan=2)
+                back_button.grid(row=row_idx + 4, column=0, columnspan=2)
+                # Totals row
+                tk.Label(self.day_frame, text="Totals").grid(row=row_idx + 3, column=0)
+                tk.Label(self.day_frame, text=str(day_total_calories)).grid(row=row_idx + 3, column=2)
+                tk.Label(self.day_frame, text=str(day_total_carbs)).grid(row=row_idx + 3, column=3)
+                tk.Label(self.day_frame, text=str(day_total_protein)).grid(row=row_idx + 3, column=4)
+                if day_total_fiber > 25:
+                    tk.Label(self.day_frame, text=str(day_total_fiber), fg="blue").grid(row=row_idx + 3, column=5)
+                else:
+                    tk.Label(self.day_frame, text=str(day_total_fiber), fg="red").grid(row=row_idx + 3, column=5)
+                tk.Label(self.day_frame, text=str(day_total_fat)).grid(row=row_idx + 3, column=6)
             else:
                 back_button = tk.Button(self.day_frame, text="Edit day", relief="solid", borderwidth=1, padx=5, pady=5,
                                         bg="dark blue", fg="white", command=backToDays)
                 back_button.grid(row=3, column=0, columnspan=2)
 
+
             calories_label = tkinter.Label(self.day_frame, text='Calories: ' + str(day_total_calories), bg="#333333", fg="#FFFFFF", font={"Ariel", 16})
-            calories_label.grid(row=0, column=2, columnspan=3       )
+            calories_label.grid(row=0, column=2, columnspan=3)
             self.day_frame.pack()
 
         def edit_day():
@@ -178,9 +197,53 @@ class MainApp(tk.Tk):
             for child in self.edit_fs_frame.winfo_children():
                 child.destroy()
             self.edit_fs_frame.pack()
+            next_foodstuff_id = database_driver.find_next_id("foodstuffs")
+            serving = 1
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Enter Data")
+            popup.geometry("400x350")
+
+            self.edit_fs_frame = tk.Frame(popup, background="#333333")
+
+            fields = ('Food_ID', 'Description', 'Serving', 'Carbs', 'Proetin', 'Fiber', 'Fat')
+
+            foodstuffs_id_label = tk.Label(self.edit_fs_frame, text=fields[0]).grid(row=1, column=0, sticky='w')
+            entry_foodstuffs_id = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuffs_id.insert(0, str(next_foodstuff_id))
+            entry_foodstuffs_id.config(state="readonly")
+            entry_foodstuffs_id.grid(row=1, column=1, sticky='w')
+            foodstuff_desc_label= tk.Label(self.edit_fs_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
+            entry_foodstuff_desc = tk.Entry(self.edit_fs_frame, width=10)
+            entry_foodstuff_desc.insert(0, 0)
+            entry_foodstuff_desc.grid(row=2, column=1, sticky='w')
+
+            def submit_data(foodstuff_id, foodstuff_desc, serving):
+                foodstuff = ftdataclasses.Foodstuff(id=foodstuff_id, description=foodstuff_desc, serving=serving)
+                print("submit_data with meal id : " + str(foodstuff.id) + " f_id :  " + str(foodstuff.description))
+                #TODO: actually call the database insert method
+                #db_update = database_driver.insert_meal(meal)
+                print(f"Created: {foodstuff}")
+                messagebox.showinfo("Created: Inserted into Meal table")
+                popup.destroy()
+
+            def cancel():
+                self.edit_meal_frame.pack_forget()
+                for child in self.edit_meal_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_foodstuffs_id.get(), entry_foodstuff_desc.get())).grid(row=3,
+                                                                                                                 column=0,
+                                                                                                                 padx=5)
+            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+
+            self.edit_meal_frame.pack()
 
         def edit_meal():
-            result = {"data": None}
             next_meal_id = database_driver.find_next_id("meals")
 
             # 1. Create the secondary window
@@ -205,14 +268,12 @@ class MainApp(tk.Tk):
             def submit_data(meal_id, foodstuff_id):
                 meal = ftdataclasses.Meal(id=meal_id, foodstuff_id=foodstuff_id)
                 print("submit_data with meal id : " + str(meal.id) + " f_id :  " + str(meal.foodstuff_id))
-                #TODO: actually call the database insert method
                 db_update = database_driver.insert_meal(meal)
                 print(f"Created: {meal}")
                 messagebox.showinfo("Created: Inserted into Meal table")
                 popup.destroy()
 
             def cancel():
-                result["data"] = None
                 self.edit_meal_frame.pack_forget()
                 for child in self.edit_meal_frame.winfo_children():
                     child.destroy()
