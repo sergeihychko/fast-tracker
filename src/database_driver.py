@@ -348,7 +348,7 @@ def find_next_id(table_name):
     except sqlite3.OperationalError as e:
         print("Error finding next ID sequence : " + str(e))
 
-def insert_meal(meal_id, foodstuff_id):
+def insert_meal(meal):
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
             cursor = conn.cursor()
@@ -356,11 +356,11 @@ def insert_meal(meal_id, foodstuff_id):
             # Insert single row
             cursor.execute(
                 "INSERT INTO meals (id, foodstuff_id) VALUES (?, ?)",
-                (meal_id, foodstuff_id),
+                (meal.id, meal.foodstuff_id),
             )
             conn.commit()
             cursor.close()
-            conn.close()
-            print(f"Inserted Meal ID: {meal_id}")
+            #conn.close()
+            print(f"Inserted Meal ID: {meal.id}")
     except sqlite3.OperationalError as e:
         print("Error inserting into Meals table")

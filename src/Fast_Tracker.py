@@ -182,8 +182,6 @@ class MainApp(tk.Tk):
         def edit_meal():
             result = {"data": None}
             next_meal_id = database_driver.find_next_id("meals")
-            meal = ftdataclasses.Meal(id=next_meal_id, foodstuff_id=0)
-            print("meal object: " + str(meal.id) + " : " + str(meal.foodstuff_id))
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -193,19 +191,24 @@ class MainApp(tk.Tk):
             self.edit_meal_frame = tk.Frame(popup, background="#333333")
 
             fields = ('Meal ID', 'Food_ID')
-            entries = {next_meal_id, 0}
 
             meal_id_label = tk.Label(self.edit_meal_frame, text=fields[0]).grid(row=1, column=0, sticky='w')
-            entry_meal_id = tk.Entry(self.edit_meal_frame, text=meal.id).grid(row=1, column=1, sticky='w')
+            entry_meal_id = tk.Entry(self.edit_meal_frame, width=10)
+            entry_meal_id.insert(0, str(next_meal_id))
+            entry_meal_id.config(state="readonly")
+            entry_meal_id.grid(row=1, column=1, sticky='w')
             meal_foodstuff_label= tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
-            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, text=meal.foodstuff_id).grid(row=2, column=1, sticky='w')
+            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, width=10)
+            entry_foodstuff_id.insert(0, 0)
+            entry_foodstuff_id.grid(row=2, column=1, sticky='w')
 
-            def submit_data(meal):
+            def submit_data(meal_id, foodstuff_id):
+                meal = ftdataclasses.Meal(id=meal_id, foodstuff_id=foodstuff_id)
                 print("submit_data with meal id : " + str(meal.id) + " f_id :  " + str(meal.foodstuff_id))
                 #TODO: actually call the database insert method
-                    #db_update = database_driver.insert_meal(meal)
+                db_update = database_driver.insert_meal(meal)
                 print(f"Created: {meal}")
-                messagebox.showinfo(f"Created: {meal}")
+                messagebox.showinfo("Created: Inserted into Meal table")
                 popup.destroy()
 
             def cancel():
@@ -215,8 +218,12 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command=submit_data).grid(row=3, column=0, padx=5)
-            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3, column=1, padx=5)
+            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_meal_id.get(), entry_foodstuff_id.get())).grid(row=3,
+                                                                                                                 column=0,
+                                                                                                                 padx=5)
+            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+                                                                                                            column=1,
+                                                                                                            padx=5)
 
             self.edit_meal_frame.pack()
 
