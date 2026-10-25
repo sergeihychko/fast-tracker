@@ -192,12 +192,14 @@ def create_test_days():
                 (35, 26),
                 (35, 5),
                 (35, 32),
+                (35, 36),
                 (36, 32),
                 (37, 34),
                 (37, 26),
                 (37, 35),
                 (37, 26),
-                (37, 5)
+                (37, 5),
+                (37, 24)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -234,7 +236,8 @@ def create_test_days():
                 (32, 'vanilla greek yogurt', 1, 140, 19, 15, 0, 0),
                 (33, 'Chicken Noodle Amazon - traditional', 1, 200, 25, 13, 3, 5),
                 (34, 'Broccoli Florets 12 Oz', 1 , 120, 16, 4, 8, 0),
-                (35, 'Honey Hot Sauce mango 1tsp', 1, 10, 2, 0, 0, 0)
+                (35, 'Honey Hot Sauce mango 1tsp', 1, 10, 2, 0, 0, 0),
+                (36, 'Raspberries', 1, 80, 18, 2, 6, 1)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
@@ -392,3 +395,20 @@ def insert_foodstuff(foodstuff):
             print(f"Inserted Meal ID: {foodstuff.id}")
     except sqlite3.OperationalError as e:
         print("Error inserting into Foodstuffs table")
+
+def find_foodstuff_by_partial(text_string):
+    try:
+        with sqlite3.connect('../data/fast-tracker.db') as conn:
+            cursor = conn.cursor()
+
+            # Query the foodstuffs table to find matches based on partial text input
+            query = f"SELECT * from foodstuffs where description LIKE {text_string}"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            if rows:
+                entries = rows
+                return entries
+            else:
+                print("No rows returned for foodstuff description : " + str(text_string))
+    except sqlite3.OperationalError as e:
+        print("Error finding next ID sequence : " + str(e))
