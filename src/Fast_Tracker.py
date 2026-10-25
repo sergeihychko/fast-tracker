@@ -270,6 +270,7 @@ class MainApp(tk.Tk):
             next_meal_id = database_driver.find_next_id("meals")
             # Create StringVar to track entry content
             entry_var = tk.StringVar()
+            foodstuff_var = tk.StringVar()
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -283,8 +284,9 @@ class MainApp(tk.Tk):
                 combo.set(results[0])
                 print("results : " + str(results))
 
-            def set_foodstuff():
-                entry_foodstuff_id = combo.get()
+            def set_foodstuff(event):
+                print("attempting to set foodstuff_id from combo box select")
+                foodstuff_var.set(combo.selection_get())
 
             self.edit_meal_frame = tk.Frame(popup, background="#333333")
 
@@ -296,7 +298,7 @@ class MainApp(tk.Tk):
             entry_meal_id.config(state="readonly")
             entry_meal_id.grid(row=1, column=1, sticky='w')
             meal_foodstuff_label= tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
-            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, width=10)
+            entry_foodstuff_id = tk.Entry(self.edit_meal_frame, textvariable=foodstuff_var, width=10)
             entry_foodstuff_id.insert(0, 0)
             entry_foodstuff_id.grid(row=2, column=1, sticky='w')
             meal_foodstuff_llokup_label = tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
@@ -304,16 +306,19 @@ class MainApp(tk.Tk):
             entry_foodstuff_lookup.grid(row=3, column=0, sticky='e')
             #TODO: need to code onchange event to call and refresh the combo box list
             # values parameter accepts a list/tuple of options
-            combo = ttk.Combobox(self.edit_meal_frame, values=results, command=set_foodstuff)
+            combo = ttk.Combobox(self.edit_meal_frame, values=results)
             #combo.current(0)  # Set default selection (optional)
             combo.grid(row=3, column=1, sticky='w')
+            combo.bind("<KeyRelease>", set_foodstuff)
+            # Optional: Bind to <FocusIn> to catch mouse selections immediately
+            combo.bind("<FocusIn>", set_foodstuff)
             # Register the trace callback
             entry_var.trace_add("write", fetch_data)
 
 
             # 4. Function to handle selection (optional)
             def on_select(event):
-                selected_value = combo.get()
+                selected_value = combo.get()[0]
                 print(f"Selected: {selected_value}")
 
             # Bind the selection event

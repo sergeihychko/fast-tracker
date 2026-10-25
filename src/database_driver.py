@@ -108,7 +108,7 @@ def create_test_days():
                 (13, 'Thursday', 1, '2026-10-22', 32, 33, 0, 0, 0),
                 (14, 'Friday', 1, '2026-10-23', 34, 35, 0, 0, 0),
                 (15, 'Saturday', 1, '2026-10-24', 36, 37, 0, 0, 0),
-                (16, 'Sunday', 1, '2026-10-24', 38, 0, 0, 0, 0),
+                (16, 'Sunday', 1, '2026-10-24', 38, 39, 0, 0, 0),
                 (17, 'Monday', 1, '2026-10-24', 0, 0, 0, 0, 0)
             ]
             meals_data = [
@@ -203,7 +203,10 @@ def create_test_days():
                 (37, 5),
                 (37, 24),
                 (38,37 ),
-                (38, 5)
+                (38, 5),
+                (39, 19),
+                (39, 22),
+                (39, 20)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -225,7 +228,7 @@ def create_test_days():
                 (17, 'wheat roll', 1, 120, 25, 6, 4, 1),
                 (18, 'Ham black forest 2oz', 1, 60, 1, 9, 0, 2),
                 (19, 'baked potato large', 1, 278, 63, 7, 7, 0),
-                (20, 'sharp cheddar 10z', 1, 110, 2, 6, 0, 9),
+                (20, 'sharp cheddar 1oz', 1, 110, 2, 6, 0, 9),
                 (21, 'Chicken Noodle Campbell Healthy', 1, 240, 27, 16, 3, 7),
                 (22, 'sour cream light', 1, 40, 1, 3, 0, 3),
                 (23, 'quinoa & spinach', 1, 340, 58, 9, 8, 8),
