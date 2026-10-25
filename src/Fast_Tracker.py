@@ -1,4 +1,5 @@
 import os
+import re
 import tkinter
 import tkinter as tk
 from tkinter import ttk
@@ -278,15 +279,17 @@ class MainApp(tk.Tk):
             popup.geometry("400x350")
             results = []
             def fetch_data(*args):
-                print("fetch_data() called ")
                 results = database_driver.find_foodstuff_by_partial(entry_var.get())
-                combo.configure(values=results)
-                combo.set(results[0])
-                print("results : " + str(results))
+                if results:
+                    combo.configure(values=results)
+                    combo.set(results[0])
+                    print("results : " + str(results))
 
             def set_foodstuff(event):
                 print("attempting to set foodstuff_id from combo box select")
-                foodstuff_var.set(combo.selection_get())
+                match = re.search(r'\d+', combo.selection_get())
+                foodstuff_selected_id = match.group()
+                foodstuff_var.set(foodstuff_selected_id)
 
             self.edit_meal_frame = tk.Frame(popup, background="#333333")
 
@@ -304,8 +307,6 @@ class MainApp(tk.Tk):
             meal_foodstuff_llokup_label = tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
             entry_foodstuff_lookup = tk.Entry(self.edit_meal_frame, textvariable=entry_var, width=20)
             entry_foodstuff_lookup.grid(row=3, column=0, sticky='e')
-            #TODO: need to code onchange event to call and refresh the combo box list
-            # values parameter accepts a list/tuple of options
             combo = ttk.Combobox(self.edit_meal_frame, values=results)
             #combo.current(0)  # Set default selection (optional)
             combo.grid(row=3, column=1, sticky='w')
