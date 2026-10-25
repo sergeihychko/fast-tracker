@@ -273,6 +273,7 @@ class MainApp(tk.Tk):
             popup = tk.Toplevel(self.root, bg="dark blue")
             popup.title("Enter Data")
             popup.geometry("400x350")
+            results = database_driver.find_foodstuff_by_partial("ea")
 
             self.edit_meal_frame = tk.Frame(popup, background="#333333")
 
@@ -287,6 +288,22 @@ class MainApp(tk.Tk):
             entry_foodstuff_id = tk.Entry(self.edit_meal_frame, width=10)
             entry_foodstuff_id.insert(0, 0)
             entry_foodstuff_id.grid(row=2, column=1, sticky='w')
+            meal_foodstuff_llokup_label = tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
+            entry_foodstuff_lookup = tk.Entry(self.edit_meal_frame, width=10)
+            entry_foodstuff_lookup.grid(row=3, column=0, sticky='e')
+            #TODO: need to code onchange event to call and refresh the combo box list
+            # values parameter accepts a list/tuple of options
+            combo = ttk.Combobox(self.edit_meal_frame, values=results)
+            #combo.current(0)  # Set default selection (optional)
+            combo.grid(row=3, column=1, sticky='w')
+
+            # 4. Function to handle selection (optional)
+            def on_select(event):
+                selected_value = combo.get()
+                print(f"Selected: {selected_value}")
+
+            # Bind the selection event
+            combo.bind("<<ComboboxSelected>>", on_select)
 
             def submit_data(meal_id, foodstuff_id):
                 meal = ftdataclasses.Meal(id=meal_id, foodstuff_id=foodstuff_id)
@@ -302,10 +319,10 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_meal_id.get(), entry_foodstuff_id.get())).grid(row=3,
+            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_meal_id.get(), entry_foodstuff_id.get())).grid(row=4,
                                                                                                                  column=0,
                                                                                                                  padx=5)
-            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=4,
                                                                                                             column=1,
                                                                                                             padx=5)
 

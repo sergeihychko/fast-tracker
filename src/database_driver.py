@@ -396,19 +396,19 @@ def insert_foodstuff(foodstuff):
     except sqlite3.OperationalError as e:
         print("Error inserting into Foodstuffs table")
 
-def find_foodstuff_by_partial(text_string):
+def find_foodstuff_by_partial(search_term):
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
             cursor = conn.cursor()
 
             # Query the foodstuffs table to find matches based on partial text input
-            query = f"SELECT * from foodstuffs where description LIKE {text_string}"
+            query = f"SELECT * from foodstuffs f WHERE UPPER(f.description) LIKE UPPER('%{search_term}%')"
             cursor.execute(query)
             rows = cursor.fetchall()
             if rows:
                 entries = rows
                 return entries
             else:
-                print("No rows returned for foodstuff description : " + str(text_string))
+                print("No rows returned for foodstuff description : " + str(search_term))
     except sqlite3.OperationalError as e:
         print("Error finding next ID sequence : " + str(e))
