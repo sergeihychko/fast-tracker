@@ -304,12 +304,12 @@ class MainApp(tk.Tk):
             entry_foodstuff_id = tk.Entry(self.edit_meal_frame, textvariable=foodstuff_var, width=10)
             entry_foodstuff_id.insert(0, 0)
             entry_foodstuff_id.grid(row=2, column=1, sticky='w')
-            meal_foodstuff_llokup_label = tk.Label(self.edit_meal_frame, text=fields[1]).grid(row=2, column=0, sticky='w')
+            meal_foodstuff_llokup_label = tk.Label(self.edit_meal_frame, text="Lookup existing foods", bg="#333333", fg="#FFFFFF").grid(row=3, column=0, columnspan=2, sticky='w')
             entry_foodstuff_lookup = tk.Entry(self.edit_meal_frame, textvariable=entry_var, width=20)
-            entry_foodstuff_lookup.grid(row=3, column=0, sticky='e')
+            entry_foodstuff_lookup.grid(row=4, column=0, sticky='e')
             combo = ttk.Combobox(self.edit_meal_frame, values=results)
             #combo.current(0)  # Set default selection (optional)
-            combo.grid(row=3, column=1, sticky='w')
+            combo.grid(row=4, column=1, sticky='w')
             combo.bind("<KeyRelease>", set_foodstuff)
             # Optional: Bind to <FocusIn> to catch mouse selections immediately
             combo.bind("<FocusIn>", set_foodstuff)
@@ -339,10 +339,10 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_meal_id.get(), entry_foodstuff_id.get())).grid(row=4,
+            tk.Button(self.edit_meal_frame, text="Submit", bg="#333333", fg="#FFFFFF", command = lambda: submit_data(entry_meal_id.get(), entry_foodstuff_id.get())).grid(row=5,
                                                                                                                  column=0,
                                                                                                                  padx=5)
-            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=4,
+            tk.Button(self.edit_meal_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
                                                                                                             column=1,
                                                                                                             padx=5)
 
