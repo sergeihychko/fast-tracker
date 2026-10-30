@@ -111,7 +111,9 @@ def create_test_days():
                 (16, 'Sunday', 1, '2026-10-25', 38, 39, 0, 0, 0),
                 (17, 'Monday', 1, '2026-10-26', 0, 0, 0, 0, 0),
                 (18, 'Tuesday', 1, '2026-10-27', 40, 41, 0, 0, 0),
-                (17, 'Wednesday', 1, '2026-10-28', 0, 0, 0, 0, 0),
+                (19, 'Wednesday', 1, '2026-10-28', 43, 0, 0, 0, 0),
+                (20, 'Thursday', 1, '2026-10-29', 44, 45, 46, 0, 0),
+                (21, 'Friday', 1, '2026-10-30', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -214,7 +216,19 @@ def create_test_days():
                 (41, 40),
                 (41, 20),
                 (41, 20),
-                (42, 21)
+                (42, 21),
+                (43, 6),
+                (43, 41),
+                (44, 42),
+                (44, 42),
+                (44, 42),
+                (44, 36),
+                (45, 9),
+                (45, 37),
+                (45, 10),
+                (45, 5),
+                (46, 43),
+                (46, 43)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -256,8 +270,10 @@ def create_test_days():
                 (37, 'Shrimp 4oz', 1, 80, 1, 15, 0, 1),
                 (38, 'Channa Masala organic', 1, 330, 44, 12, 17, 12),
                 (39, 'Corn frozen', 1, 90, 19, 3, 2, 0),
-                (40, 'Plant based chili with beans', 1, 290, 45, 22, 10, 2)
-
+                (40, 'Plant based chili with beans', 1, 290, 45, 22, 10, 2),
+                (41, '1tbsp butter', 1, 100, 0, 0, 0, 11),
+                (42, 'instant quaker oatmeal fruit and cream', 1, 110, 23, 3, 2, 2),
+                (43, ' Creamy Natural Peanut Butter Spread', 1, 190, 8, 7, 2, 15)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
