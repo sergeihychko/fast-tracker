@@ -113,7 +113,8 @@ def create_test_days():
                 (18, 'Tuesday', 1, '2026-10-27', 40, 41, 0, 0, 0),
                 (19, 'Wednesday', 1, '2026-10-28', 43, 0, 0, 0, 0),
                 (20, 'Thursday', 1, '2026-10-29', 44, 45, 46, 0, 0),
-                (21, 'Friday', 1, '2026-10-30', 0, 0, 0, 0, 0)
+                (21, 'Friday', 1, '2026-10-30', 47, 48, 0, 0, 0),
+                (22, 'Saturday', 1, '2026-10-31', 49, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -228,7 +229,16 @@ def create_test_days():
                 (45, 10),
                 (45, 5),
                 (46, 43),
-                (46, 43)
+                (46, 43),
+                (47, 44),
+                (48, 40),
+                (48, 20),
+                (48, 37),
+                (48, 37),
+                (49, 43),
+                (49, 42),
+                (49, 42),
+                (49, 42)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -273,7 +283,8 @@ def create_test_days():
                 (40, 'Plant based chili with beans', 1, 290, 45, 22, 10, 2),
                 (41, '1tbsp butter', 1, 100, 0, 0, 0, 11),
                 (42, 'instant quaker oatmeal fruit and cream', 1, 110, 23, 3, 2, 2),
-                (43, ' Creamy Natural Peanut Butter Spread', 1, 190, 8, 7, 2, 15)
+                (43, 'Creamy Natural Peanut Butter Spread', 1, 190, 8, 7, 2, 15),
+                (44, '1/2 serving Peanut Butter Spread', 1, 95, 4, 3, 1, 7)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
