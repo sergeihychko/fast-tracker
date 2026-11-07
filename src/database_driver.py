@@ -115,7 +115,12 @@ def create_test_days():
                 (20, 'Thursday', 1, '2026-10-29', 44, 45, 46, 0, 0),
                 (21, 'Friday', 1, '2026-10-30', 47, 48, 0, 0, 0),
                 (22, 'Saturday', 1, '2026-10-31', 49, 50, 0, 0, 0),
-                (23, 'Sunday', 1, '2026-11-01', 51, 0, 0, 0, 0)
+                (23, 'Sunday', 1, '2026-11-01', 51, 0, 0, 0, 0),
+                (24, 'Monday', 1, '2026-11-02', 52, 53, 0, 0, 0),
+                (25, 'Tuesday', 1, '2026-11-03', 54, 0, 0, 0, 0),
+                (26, 'Wednesday', 1, '2026-11-04', 55, 0, 0, 0, 0),
+                (27, 'Thursday', 1, '2026-11-05', 56, 0, 0, 0, 0),
+                (28, 'Friday', 1, '2026-11-06', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -247,7 +252,22 @@ def create_test_days():
                 (51, 43),
                 (51, 3),
                 (51, 45),
-                (51, 41)
+                (51, 41),
+                (52, 43),
+                (53, 47),
+                (53, 46),
+                (53, 46),
+                (53, 46),
+                (53, 46),
+                (53, 46),
+                (54, 47),
+                (54, 48),
+                (54, 49),
+                (55, 50),
+                (55, 51),
+                (56, 48),
+                (56, 48),
+                (56, 43)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -294,7 +314,13 @@ def create_test_days():
                 (42, 'instant quaker oatmeal fruit and cream', 1, 110, 23, 3, 2, 2),
                 (43, 'Creamy Natural Peanut Butter Spread', 1, 190, 8, 7, 2, 15),
                 (44, '1/2 serving Peanut Butter Spread', 1, 95, 4, 3, 1, 7),
-                (45, 'california mix 12 oz', 1, 120, 20, 8, 8, 0)
+                (45, 'california mix 12 oz', 1, 120, 20, 8, 8, 0),
+                (46, 'Stouffers Mac n cheese', 1, 310, 34, 13, 1, 14),
+                (47, 'Beefaroni 15oz', 1, 350, 48, 10, 2, 13),
+                (48, 'Ravioli 15oz', 1, 320, 52, 9, 2, 8),
+                (49, 'Beef with veg soup', 1, 220, 37, 12, 7, 3),
+                (50, 'Philly cheesesteak', 1, 1146, 84, 65, 6, 61),
+                (51, 'cheese fries', 1, 610, 91, 9, 4, 23)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
