@@ -120,7 +120,9 @@ def create_test_days():
                 (25, 'Tuesday', 1, '2026-11-03', 54, 0, 0, 0, 0),
                 (26, 'Wednesday', 1, '2026-11-04', 55, 0, 0, 0, 0),
                 (27, 'Thursday', 1, '2026-11-05', 56, 0, 0, 0, 0),
-                (28, 'Friday', 1, '2026-11-06', 0, 0, 0, 0, 0)
+                (28, 'Friday', 1, '2026-11-06', 0, 0, 0, 0, 0),
+                (29, 'Saturday', 1, '2026-11-07', 57, 58, 0, 0, 0),
+                (30, 'Sunday', 1, '2026-11-08', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -267,7 +269,12 @@ def create_test_days():
                 (55, 51),
                 (56, 48),
                 (56, 48),
-                (56, 43)
+                (56, 43),
+                (57, 52),
+                (57, 53),
+                (58, 54),
+                (58, 55),
+                (58, 52)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -283,7 +290,7 @@ def create_test_days():
                 (11, 'Tilapia fillet', 1, 220, 46, 0, 0, 4),
                 (12, 'cottage cheese 4%', 1, 110, 13, 5, 0, 5),
                 (13, 'fruit mix', 1, 40, 1, 13, 3, 0),
-                (14, 'banana', 1, 121, 1, 31, 4, 0),
+                (14, 'banana', 1, 121, 31, 1, 4, 0),
                 (15, 'maple bourbon salad', 1, 525, 35, 10, 7, 42),
                 (16, 'light breaded chicken', 1, 210, 14, 22, 0, 8),
                 (17, 'wheat roll', 1, 120, 25, 6, 4, 1),
@@ -320,7 +327,11 @@ def create_test_days():
                 (48, 'Ravioli 15oz', 1, 320, 52, 9, 2, 8),
                 (49, 'Beef with veg soup', 1, 220, 37, 12, 7, 3),
                 (50, 'Philly cheesesteak', 1, 1146, 84, 65, 6, 61),
-                (51, 'cheese fries', 1, 610, 91, 9, 4, 23)
+                (51, 'cheese fries', 1, 610, 91, 9, 4, 23),
+                (52, 'banana small', 1, 90, 23, 1, 3, 0),
+                (53, 'Kodiak Muffin blueberry', 1, 260, 40, 12, 4, 6),
+                (54, 'cottage cheese low fat', 1, 90, 5, 13, 0, 2),
+                (55, 'strawberies sliced 1/2 serving', 1, 25, 6, 0, 1, 0)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
