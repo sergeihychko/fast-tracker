@@ -122,7 +122,8 @@ def create_test_days():
                 (27, 'Thursday', 1, '2026-11-05', 56, 0, 0, 0, 0),
                 (28, 'Friday', 1, '2026-11-06', 0, 0, 0, 0, 0),
                 (29, 'Saturday', 1, '2026-11-07', 57, 58, 0, 0, 0),
-                (30, 'Sunday', 1, '2026-11-08', 60, 59, 0, 0, 0)
+                (30, 'Sunday', 1, '2026-11-08', 60, 59, 61, 0, 0),
+                (31, 'Monday', 1, '2026-11-08', 62, 63, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -286,7 +287,17 @@ def create_test_days():
                 (59, 57),
                 (60, 54),
                 (60, 55),
-                (60, 52)
+                (60, 52),
+                (61, 60),
+                (61, 61),
+                (61, 61),
+                (62, 54),
+                (62, 55),
+                (62, 62),
+                (63, 56),
+                (63, 57),
+                (63, 63),
+                (63, 64)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
@@ -347,7 +358,12 @@ def create_test_days():
                 (56, 'pasta sauce spicy vodka', 1, 110, 11, 2, 2, 6),
                 (57, 'cheese tortelini', 1, 250, 43, 9, 2, 5),
                 (58, 'horseradish sauce 1tsb', 1, 20, 0, 0, 0, 2),
-                (59, 'ham ', 1, 70, 4, 9, 0, 2)
+                (59, 'ham ', 1, 70, 4, 9, 0, 2),
+                (60, 'cauliflower 12oz', 1, 120, 16, 4, 8, 0),
+                (61, 'nacho cheese sauce', 1, 50, 5, 1, 0, 3),
+                (62, 'Pure protein bar', 1, 180, 20, 20, 0, 3),
+                (63, 'Chicken Breast Strips 4oz', 1, 125, 1, 25, 0, 3),
+                (64, 'quinoa, brown rice, garlic 1/2 packet', 1, 220, 42, 4, 4, 4)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
