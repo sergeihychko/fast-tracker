@@ -433,7 +433,7 @@ def get_day_entry(day_id):
     except sqlite3.OperationalError as e:
         print("Error finding day data : ", e)
 
-def get_user_data(user_id):
+def get_user_data(user_id, limit):
     # create a database connection
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:
@@ -441,7 +441,7 @@ def get_user_data(user_id):
             cursor = conn.cursor()
 
             # Parameterized query using ? placeholder
-            cursor.execute("SELECT * FROM days WHERE days.user_id = ?", (user_id, ))
+            cursor.execute("SELECT * FROM days WHERE days.user_id = ? ORDER BY id DESC LIMIT ?", (user_id, limit))
             rows = cursor.fetchall()
             if rows:
                 #print("Found rows:", rows)

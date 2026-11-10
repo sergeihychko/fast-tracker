@@ -95,7 +95,21 @@ class MainApp(tk.Tk):
             for child in self.entry_frame.winfo_children():
                 child.destroy()
             print("user : " + str(self.current_user))
-            data = database_driver.get_user_data(self.current_user)
+
+            row_offset = 2
+            def rdn_on_change(event):
+                self.rdn = combo.get()
+
+            # Define options for retrieve days number combo box
+            options = ["10", "20", "100"]
+            # Create the retrieve days number combo box
+            combo = ttk.Combobox(self.entry_frame, values=options, state="readonly")
+            combo.current(0)
+            combo.grid(row=1, column=1, sticky='w', pady=20)
+            # Bind the selection change event
+            combo.bind("<<ComboboxSelected>>", rdn_on_change)
+
+            data = database_driver.get_user_data(self.current_user, self.rdn)
             print("back from get_user_data call with data : " + str(data))
             # Iterate through rows and columns to place widgets
             for row_idx, row_data in enumerate(data):
@@ -104,12 +118,11 @@ class MainApp(tk.Tk):
                     # Create a Label widget for each cell
                     label = tk.Label(self.entry_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                     # Place the widget in the grid
-                    label.grid(row=row_idx, column=col_idx, sticky="nsew")
+                    label.grid(row=row_idx + row_offset, column=col_idx, sticky="nsew")
                 btn = tk.Button(self.entry_frame, text="Edit day " + str(date_id), relief="solid", borderwidth=1, padx=5, pady=5, bg="dark blue",
                                 fg="white", command=lambda date_id=date_id: page(date_id))
-                #print("just wrote out the button call page({date_id})" + str(date_id))
                 # Place the widget in the grid
-                btn.grid(row=row_idx, column=col_idx + 1, sticky="nsew")
+                btn.grid(row=row_idx + row_offset, column=col_idx + 1, sticky="nsew")
             self.entry_frame.pack()
 
         def backToDays():
@@ -364,6 +377,7 @@ class MainApp(tk.Tk):
         self.debug = config.get('main-section', 'debug_level', fallback=None)
         self.protein_threshold = int(config.get('main-section', 'protein_threshold', fallback=None))
         self.fiber_threshold = int(config.get('main-section', 'fiber_threshold', fallback=None))
+        self.rdn = int(config.get('main-section', 'default_days_size', fallback=None))
 
         if int(self.debug) == 1:
             self.current_user = 1
