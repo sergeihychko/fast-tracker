@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import ftdataclasses
+from configparser import ConfigParser
 
 from pywin.dialogs import login
 
@@ -73,14 +74,16 @@ class MainApp(tk.Tk):
         database_driver.create_test_days()
 
         def login():
-            user_id = database_driver.check_login(username_entru.get(), password_entry.get())
-            print(f"User ID: {user_id}")
-            if (user_id == 0):
-                messagebox.showerror("Error", "Login Failed")
+            if int(self.debug) < 1:
+                user_id = database_driver.check_login(username_entru.get(), password_entry.get())
+                print(f"User ID: {user_id}")
+                if (user_id == 0):
+                    messagebox.showerror("Error", "Login Failed")
+                else:
+                    self.current_user = user_id
+                    create_entry_frame()
             else:
-                self.current_user = user_id
                 create_entry_frame()
-
 
         def create_entry_frame():
             self.frame.pack_forget()
@@ -91,6 +94,7 @@ class MainApp(tk.Tk):
                 child.destroy()
             for child in self.entry_frame.winfo_children():
                 child.destroy()
+            print("user : " + str(self.current_user))
             data = database_driver.get_user_data(self.current_user)
             print("back from get_user_data call with data : " + str(data))
             # Iterate through rows and columns to place widgets
@@ -143,7 +147,7 @@ class MainApp(tk.Tk):
             date_label.grid(row=0, column=1)
             row_idx = 0
 
-            columns = ["Description", "Servings", "Calories", "Protein", "Carbs", "Fiber", "Fat"]
+            columns = ["Description", "Servings", "Calories", "Carbs", "Protein", "Fiber", "Fat"]
             for head_idx, value in enumerate(columns):
                 header_label = tk.Label(self.day_frame, text=str(value), relief="solid", borderwidth=1, padx=5, pady=5)
                 header_label.grid(row=1, column=head_idx, sticky="nsew")
@@ -171,9 +175,12 @@ class MainApp(tk.Tk):
                 tk.Label(self.day_frame, text="Totals").grid(row=row_idx + 3, column=0)
                 tk.Label(self.day_frame, text=str(day_total_calories)).grid(row=row_idx + 3, column=2)
                 tk.Label(self.day_frame, text=str(day_total_carbs)).grid(row=row_idx + 3, column=3)
-                tk.Label(self.day_frame, text=str(day_total_protein)).grid(row=row_idx + 3, column=4)
-                if day_total_fiber > 25:
-                    tk.Label(self.day_frame, text=str(day_total_fiber), fg="blue").grid(row=row_idx + 3, column=5)
+                if day_total_protein > self.protein_threshold:
+                    tk.Label(self.day_frame, text=str(day_total_protein), fg="green").grid(row=row_idx + 3, column=4)
+                else:
+                    tk.Label(self.day_frame, text=str(day_total_protein), fg="red").grid(row=row_idx + 3, column=4)
+                if day_total_fiber > self.fiber_threshold:
+                    tk.Label(self.day_frame, text=str(day_total_fiber), fg="green").grid(row=row_idx + 3, column=5)
                 else:
                     tk.Label(self.day_frame, text=str(day_total_fiber), fg="red").grid(row=row_idx + 3, column=5)
                 tk.Label(self.day_frame, text=str(day_total_fat)).grid(row=row_idx + 3, column=6)
@@ -347,6 +354,19 @@ class MainApp(tk.Tk):
                                                                                                             padx=5)
 
             self.edit_meal_frame.pack()
+
+        # Config
+        config = ConfigParser()
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        config_file_path = os.path.join(script_dir, "..", "settings.ini")
+        config.read(config_file_path)
+
+        self.debug = config.get('main-section', 'debug_level', fallback=None)
+        self.protein_threshold = int(config.get('main-section', 'protein_threshold', fallback=None))
+        self.fiber_threshold = int(config.get('main-section', 'fiber_threshold', fallback=None))
+
+        if int(self.debug) == 1:
+            self.current_user = 1
 
         # Create widgets
         login_label = tkinter.Label(self.frame, text="Login", bg="#333333", fg="#FFFFFF", font={"Ariel", 25})

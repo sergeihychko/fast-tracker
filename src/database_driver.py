@@ -124,7 +124,7 @@ def create_test_days():
                 (29, 'Saturday', 1, '2026-11-07', 57, 58, 0, 0, 0),
                 (30, 'Sunday', 1, '2026-11-08', 60, 59, 61, 0, 0),
                 (31, 'Monday', 1, '2026-11-09', 62, 63, 0, 0, 0),
-                (32, 'Tuesday', 1, '2026-11-10', 64, 65, 0, 0, 0)
+                (32, 'Tuesday', 1, '2026-11-10', 64, 65, 66, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -310,17 +310,19 @@ def create_test_days():
                 (65, 58),
                 (65, 59),
                 (65, 34),
-                (65, 61)
+                (65, 61),
+                (65, 7),
+                (66, 66)
 
             ]
             foodstuffs_data = [
-                (1, 'Wheat Bagel', 1, 220, 10, 45, 6, 2),
+                (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
                 (2, 'Light cream cheese', 1, 60, 2, 2, 0 ,5),
                 (3, 'Lentil Roasted Veg soup', 1, 180, 13, 42, 15, 1),
                 (4, 'Catfish fillet', 1, 150, 17, 0, 0, 7),
                 (5, 'brown rice 1cup', 1, 220, 4, 41, 2, 5),
                 (6, 'Brussel sprouts', 1, 180, 12, 32, 12, 0),
-                (7, 'fiberone soft 2 pack', 1, 140, 4, 34, 12, 6),
+                (7, 'fiberone soft 2 pack', 1, 140, 34, 4, 14, 6),
                 (8, 'wheat thins crackers', 1, 140, 2, 23, 2, 5),
                 (9, 'Progresso Chicken Noodle', 1, 130, 11, 19, 2, 3),
                 (10, 'Teriyaki sauce', 1, 50, 2, 10, 0, 0),
@@ -378,7 +380,8 @@ def create_test_days():
                 (62, 'Pure protein bar', 1, 180, 20, 20, 0, 3),
                 (63, 'Chicken Breast Strips 4oz', 1, 125, 1, 25, 0, 3),
                 (64, 'quinoa, brown rice, garlic 1/2 packet', 1, 220, 42, 4, 4, 4),
-                (65, 'Probiotic Blueberry FruiChias', 1, 60, 19, 0, 3, 0)
+                (65, 'Probiotic Blueberry FruiChias', 1, 60, 19, 0, 3, 0),
+                (66, 'Muscle Milk Strawberry', 1, 270, 21, 32, 6, 9)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
@@ -458,7 +461,7 @@ def get_days_detail(day_id):
 
             # Parameterized query using ? placeholder
             query_statement = """
-                SELECT f.description, f.serving, f.calories, f.protein, f.carbs, f.fiber, f.fat, d.id         
+                SELECT f.description, f.serving, f.calories, f.carbs, f.protein, f.fiber, f.fat, d.id         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
