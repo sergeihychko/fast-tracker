@@ -312,7 +312,9 @@ def create_test_days():
                 (65, 34),
                 (65, 61),
                 (65, 7),
-                (66, 66)
+                (66, 66),
+                (66, 10),
+                (66, 67)
 
             ]
             foodstuffs_data = [
@@ -381,7 +383,8 @@ def create_test_days():
                 (63, 'Chicken Breast Strips 4oz', 1, 125, 1, 25, 0, 3),
                 (64, 'quinoa, brown rice, garlic 1/2 packet', 1, 220, 42, 4, 4, 4),
                 (65, 'Probiotic Blueberry FruiChias', 1, 60, 19, 0, 3, 0),
-                (66, 'Muscle Milk Strawberry', 1, 270, 21, 32, 6, 9)
+                (66, 'Muscle Milk Strawberry', 1, 270, 21, 32, 6, 9),
+                (67, 'Catfish 4 oz amazon', 1, 130, 0, 17, 0, 7)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)

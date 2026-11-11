@@ -188,11 +188,11 @@ class MainApp(tk.Tk):
                 tk.Label(self.day_frame, text="Totals").grid(row=row_idx + 3, column=0)
                 tk.Label(self.day_frame, text=str(day_total_calories)).grid(row=row_idx + 3, column=2)
                 tk.Label(self.day_frame, text=str(day_total_carbs)).grid(row=row_idx + 3, column=3)
-                if day_total_protein > self.protein_threshold:
+                if day_total_protein >= self.protein_threshold:
                     tk.Label(self.day_frame, text=str(day_total_protein), fg="green").grid(row=row_idx + 3, column=4)
                 else:
                     tk.Label(self.day_frame, text=str(day_total_protein), fg="red").grid(row=row_idx + 3, column=4)
-                if day_total_fiber > self.fiber_threshold:
+                if day_total_fiber >= self.fiber_threshold:
                     tk.Label(self.day_frame, text=str(day_total_fiber), fg="green").grid(row=row_idx + 3, column=5)
                 else:
                     tk.Label(self.day_frame, text=str(day_total_fiber), fg="red").grid(row=row_idx + 3, column=5)
