@@ -128,7 +128,7 @@ def create_test_days():
                 (33, 'Wednesday', 1, '2026-11-11', 67, 68, 0, 0, 0),
                 (34, 'Thursday', 1, '2026-11-12', 69, 70, 0, 0, 0),
                 (35, 'Friday', 1, '2026-11-13', 71, 72, 0, 0, 0),
-                (36, 'Saturday', 1, '2026-11-14', 73, 0, 0, 0, 0),
+                (36, 'Saturday', 1, '2026-11-14', 73, 74, 0, 0, 0),
                 (37, 'Sunday', 1, '2026-11-14', 0, 0, 0, 0, 0)
             ]
             meals_data = [
@@ -361,7 +361,10 @@ def create_test_days():
                 (72, 7),
                 (72, 62),
                 (73, 54),
-                (73, 55)
+                (73, 55),
+                (73, 7),
+                (74, 75),
+                (74, 76)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -437,7 +440,9 @@ def create_test_days():
                 (71, 'corn 1 serving', 1, 90, 19, 3, 2 ,0),
                 (72, 'beans', 1, 110, 21, 7, 5, 0),
                 (73, 'peas 12 oz', 1, 280, 28, 16, 16, 0),
-                (74, 'planters peanuts', 1, 170, 9, 6, 2, 12)
+                (74, 'planters peanuts', 1, 170, 9, 6, 2, 12),
+                (75, 'quinoa, brown and red rice, 1/2 packet', 1, 200, 42, 4, 3, 4),
+                (76, 'salmon atlantic 6oz', 1, 370, 0, 34, 0, 26)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
