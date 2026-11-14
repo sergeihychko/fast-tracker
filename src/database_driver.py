@@ -567,6 +567,25 @@ def find_next_id(table_name):
     except sqlite3.OperationalError as e:
         print("Error finding next ID sequence : " + str(e))
 
+def get_month_ids(month, year):
+    with sqlite3.connect('../data/fast-tracker.db') as conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT id 
+            FROM days 
+            WHERE strftime('%Y', ACTUAL_DATE) = ? 
+            AND strftime('%m', ACTUAL_DATE) = ?
+        """
+        print("query : " + str(query))
+        cursor.execute(query, (year, month))
+        ids = cursor.fetchall()
+        return ids
+
+def get_monthly_averages(month, year):
+    ids = get_month_ids(month, year)
+    print("IDs for the month : " + str(month) + " : " + str(ids))
+    return []
+
 def insert_meal(meal):
     try:
         with sqlite3.connect('../data/fast-tracker.db') as conn:

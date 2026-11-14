@@ -42,9 +42,16 @@ class MainApp(tk.Tk):
         logout_menu.add_separator()
         logout_menu.add_command(label="Exit", command=root.quit)
 
-        # 3. Add the submenu to the menu bar
+        # 3. Create a 'Reports' submenu
+        reports_menu = tk.Menu(menubar, tearoff=0)
+        reports_menu.add_command(label="Monthly Averages", command=lambda: report_monthly())
+        reports_menu.add_separator()
+        reports_menu.add_command(label="Exit", command=root.quit)
+
+        # 4. Add the submenu to the menu bar
         menubar.add_cascade(label="Entry", menu=entry_menu)
         menubar.add_cascade(label="User", menu=logout_menu)
+        menubar.add_cascade(label="Reports", menu=reports_menu)
 
 
         # Initialize global user data container in the controller
@@ -370,6 +377,10 @@ class MainApp(tk.Tk):
                                                                                                             padx=5)
 
             self.edit_meal_frame.pack()
+
+        def report_monthly():
+            print("\n Reports / Monthly averages called \n")
+            monthly_averages = database_driver.get_monthly_averages(10, 2026)
 
         # Config
         config = ConfigParser()
