@@ -187,7 +187,10 @@ class MainApp(tk.Tk):
                 # Totals row
                 tk.Label(self.day_frame, text="Totals").grid(row=row_idx + 3, column=0)
                 tk.Label(self.day_frame, text=str(day_total_calories)).grid(row=row_idx + 3, column=2)
-                tk.Label(self.day_frame, text=str(day_total_carbs)).grid(row=row_idx + 3, column=3)
+                if day_total_carbs <= self.carbs_threshold:
+                    tk.Label(self.day_frame, text=str(day_total_carbs), fg="green").grid(row=row_idx + 3, column=3)
+                else:
+                    tk.Label(self.day_frame, text=str(day_total_carbs), fg="orange").grid(row=row_idx + 3, column=3)
                 if day_total_protein >= self.protein_threshold:
                     tk.Label(self.day_frame, text=str(day_total_protein), fg="green").grid(row=row_idx + 3, column=4)
                 else:
@@ -377,6 +380,7 @@ class MainApp(tk.Tk):
         self.debug = config.get('main-section', 'debug_level', fallback=None)
         self.protein_threshold = int(config.get('main-section', 'protein_threshold', fallback=None))
         self.fiber_threshold = int(config.get('main-section', 'fiber_threshold', fallback=None))
+        self.carbs_threshold = int(config.get('main-section', 'carbs_threshold', fallback=None))
         self.rdn = int(config.get('main-section', 'default_days_size', fallback=None))
 
         if int(self.debug) == 1:
