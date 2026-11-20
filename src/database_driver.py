@@ -133,8 +133,9 @@ def create_test_days():
                 (38, 'Monday', 1, '2026-11-16', 75, 76, 0, 0, 0),
                 (39, 'Tuesday', 1, '2026-11-17', 77, 78, 79, 0, 0),
                 (40, 'Wednesday', 1, '2026-11-18', 80, 81, 0, 0, 0),
-                (41, 'Thursday', 1, '2026-11-19', 82, 0, 0, 0, 0),
-                (42, 'Friday', 1, '2026-11-20', 0, 0, 0, 0, 0)
+                (41, 'Thursday', 1, '2026-11-19', 82, 83, 0, 0, 0),
+                (42, 'Friday', 1, '2026-11-20', 84, 85, 0, 0, 0),
+                (43, 'Saturday', 1, '2026-11-21', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -408,22 +409,37 @@ def create_test_days():
                 (81, 63),
                 (82, 7),
                 (82, 54),
-                (82, 79)
+                (82, 79),
+                (83, 70),
+                (83, 70),
+                (83, 80),
+                (83, 63),
+                (83, 39),
+                (83, 81),
+                (83, 75),
+                (83, 67),
+                (84, 54),
+                (84, 54),
+                (84, 78),
+                (84, 7),
+                (85, 5),
+                (85, 76),
+                (85, 3)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
                 (2, 'Light cream cheese', 1, 60, 2, 2, 0 ,5),
-                (3, 'Lentil Roasted Veg soup', 1, 180, 13, 42, 15, 1),
-                (4, 'Catfish fillet', 1, 150, 17, 0, 0, 7),
+                (3, 'Lentil Roasted Veg soup', 1, 180, 42, 13, 15, 1),
+                (4, 'Catfish fillet', 1, 150, 0, 17, 0, 7),
                 (5, 'brown rice 1cup', 1, 220, 4, 41, 2, 5),
-                (6, 'Brussel sprouts', 1, 180, 12, 32, 12, 0),
+                (6, 'Brussel sprouts', 1, 180, 32, 12, 12, 0),
                 (7, 'fiberone soft 2 pack', 1, 140, 34, 4, 14, 6),
                 (8, 'wheat thins crackers', 1, 140, 2, 23, 2, 5),
                 (9, 'Progresso Chicken Noodle', 1, 130, 11, 19, 2, 3),
-                (10, 'Teriyaki sauce', 1, 50, 2, 10, 0, 0),
+                (10, 'Teriyaki sauce', 1, 50, 10, 2, 0, 0),
                 (11, 'Tilapia fillet', 1, 220, 46, 0, 0, 4),
                 (12, 'cottage cheese 4%', 1, 110, 13, 5, 0, 5),
-                (13, 'fruit mix', 1, 40, 1, 13, 3, 0),
+                (13, 'fruit mix', 1, 40, 13, 1, 3, 0),
                 (14, 'banana', 1, 121, 31, 1, 4, 0),
                 (15, 'maple bourbon salad', 1, 525, 35, 10, 7, 42),
                 (16, 'light breaded chicken', 1, 210, 14, 22, 0, 8),
@@ -489,7 +505,9 @@ def create_test_days():
                 (76, 'salmon atlantic 6oz', 1, 370, 0, 34, 0, 26),
                 (77, 'green beans 12 oz', 1, 120, 24, 4, 8, 0),
                 (78, 'cherries dark sweet 20', 1, 90, 22, 1, 3, 0),
-                (79, 'cherries dark sweet 10', 1, 45, 11, 1,2,0)
+                (79, 'cherries dark sweet 10', 1, 45, 11, 1,2,0),
+                (80, 'Amazon Grocery, Mexican-Style Four Cheese 1oz', 1, 110, 2, 6, 0, 8),
+                (81, 'salsa fresh Amazon 4 tbs', 1, 10, 2, 0, 0, 0)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
