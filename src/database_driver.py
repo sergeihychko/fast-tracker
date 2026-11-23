@@ -135,7 +135,8 @@ def create_test_days():
                 (40, 'Wednesday', 1, '2026-11-18', 80, 81, 0, 0, 0),
                 (41, 'Thursday', 1, '2026-11-19', 82, 83, 0, 0, 0),
                 (42, 'Friday', 1, '2026-11-20', 84, 85, 0, 0, 0),
-                (43, 'Saturday', 1, '2026-11-21', 86, 0, 0, 0, 0)
+                (43, 'Saturday', 1, '2026-11-21', 86, 87, 0, 0, 0),
+                (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -434,7 +435,23 @@ def create_test_days():
                 (86, 80),
                 (86, 63),
                 (86, 34),
-                (86, 61)
+                (86, 61),
+                (87, 69),
+                (87, 69),
+                (87, 69),
+                (87, 2),
+                (87, 43),
+                (87, 82),
+                (88, 54),
+                (88, 79),
+                (88, 7),
+                (88, 69),
+                (88, 69),
+                (88, 63),
+                (88, 83),
+                (88, 26),
+                (88, 26),
+                (88, 5)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -517,7 +534,9 @@ def create_test_days():
                 (78, 'cherries dark sweet 20', 1, 90, 22, 1, 3, 0),
                 (79, 'cherries dark sweet 10', 1, 45, 11, 1,2,0),
                 (80, 'Amazon Grocery, Mexican-Style Four Cheese 1oz', 1, 110, 2, 6, 0, 8),
-                (81, 'salsa fresh Amazon 4 tbs', 1, 10, 2, 0, 0, 0)
+                (81, 'salsa fresh Amazon 4 tbs', 1, 10, 2, 0, 0, 0),
+                (82, 'strawberry preservest 2 tbs', 1, 100, 26, 0, 0, 0),
+                (83, 'Pataks Tikka Masala All Purpose Sauce',1, 40, 5, 1, 1, 2)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
