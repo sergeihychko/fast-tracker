@@ -136,7 +136,8 @@ def create_test_days():
                 (41, 'Thursday', 1, '2026-11-19', 82, 83, 0, 0, 0),
                 (42, 'Friday', 1, '2026-11-20', 84, 85, 0, 0, 0),
                 (43, 'Saturday', 1, '2026-11-21', 86, 87, 0, 0, 0),
-                (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0)
+                (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
+                (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -450,8 +451,15 @@ def create_test_days():
                 (88, 63),
                 (88, 83),
                 (88, 26),
-                (88, 26),
-                (88, 5)
+                (88, 5),
+                (89, 68),
+                (89, 84),
+                (89, 86),
+                (89, 7),
+                (90, 75),
+                (90, 37),
+                (90, 37),
+                (90, 10)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -536,7 +544,10 @@ def create_test_days():
                 (80, 'Amazon Grocery, Mexican-Style Four Cheese 1oz', 1, 110, 2, 6, 0, 8),
                 (81, 'salsa fresh Amazon 4 tbs', 1, 10, 2, 0, 0, 0),
                 (82, 'strawberry preservest 2 tbs', 1, 100, 26, 0, 0, 0),
-                (83, 'Pataks Tikka Masala All Purpose Sauce',1, 40, 5, 1, 1, 2)
+                (83, 'Pataks Tikka Masala All Purpose Sauce',1, 40, 5, 1, 1, 2),
+                (84, 'Flax and Chia Seed Blend 1.5 tbsp', 1, 70, 4, 3, 3, 4),
+                (85, 'Triple Berry Mix, 1.25 cups', 1, 80, 18, 1, 5, 1),
+                (86, 'Triple Berry Mix, 1/2 serving', 1, 40, 9, 0, 3, 0)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
