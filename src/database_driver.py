@@ -696,15 +696,18 @@ def get_monthly_averages(month, year):
     return ids
 
 def get_daily_calorie_totals(month, year, ids):
+    calories = []
     print("in stub get_daily_calorie_totals(month, year)")
     for id in ids:
-        calories = get_daily_calories(id)
-        print(" : " + str(calories))
+        daily_c = get_daily_calories(id)
+        calories.append(daily_c)
+        #print(" : " + str(calories))
+    print("complete list of days in ids array : " + str(calories))
+    return calories
 
 def get_daily_calories(day_id):
     val1 = str(day_id[0])
-    print("in get_monthly_averages() :" + str(day_id) + ":")
-    calories = 0
+    day_total = 0
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
@@ -717,10 +720,12 @@ def get_daily_calories(day_id):
         """
         cursor.execute(query_statement, (val1, ))
         calories = cursor.fetchall()
-        dt = np.array(calories)
-        #print("returned calories for day " + str(val1) + " : was : " + str(calories) )
-        day_total = sum(dt)
-        return day_total
+        if len(calories) > 1:
+            dt = np.array(calories)
+            # print("returned calories for day " + str(val1) + " : was : " + str(calories) )
+            day_total = np.sum(dt)
+        t = int(str(day_total))
+        return [t, day_id[0]]
 
 def get_daily_protein(day_id):
     val1 = str(day_id[0])

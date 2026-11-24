@@ -6,6 +6,10 @@ from tkinter import ttk
 from tkinter import messagebox
 import ftdataclasses
 from configparser import ConfigParser
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 from pywin.dialogs import login
 
@@ -63,6 +67,7 @@ class MainApp(tk.Tk):
         self.day_frame = tk.Frame(root, background="#333333")
         self.edit_d_frame = tk.Frame(root, background="#333333")
         self.edit_fs_frame = tk.Frame(root, background="#333333")
+        self.report_frame = tk.Frame(root, background="#333333")
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -378,6 +383,19 @@ class MainApp(tk.Tk):
             self.edit_meal_frame.pack()
 
         def report_monthly():
+            self.report_frame.pack_forget()
+            for child in self.report_frame.winfo_children():
+                child.destroy()
+            self.report_frame.pack()
+            next_foodstuff_id = database_driver.find_next_id("foodstuffs")
+            defualt_serving = 1
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
             month = 10
             year = 2026
             print("\n Reports / Monthly averages called \n")
@@ -385,6 +403,38 @@ class MainApp(tk.Tk):
             print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_calorie_totals(month, year, ids)
             print("datapoints calories : " + str(datapoints))
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(datapoints, columns=['Calories', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            tk.Button(self.report_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
 
         # Config
         config = ConfigParser()
