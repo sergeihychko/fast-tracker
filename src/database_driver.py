@@ -459,7 +459,10 @@ def create_test_days():
                 (90, 75),
                 (90, 37),
                 (90, 37),
-                (90, 10)
+                (90, 10),
+                (90, 6),
+                (90, 61),
+                (90, 65)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -678,8 +681,8 @@ def get_month_ids(month, year):
         query = """
             SELECT id 
             FROM days 
-            WHERE strftime('%Y', ACTUAL_DATE) = ? 
-            AND strftime('%m', ACTUAL_DATE) = ?
+            WHERE CAST(strftime('%Y', actual_date) AS INTEGER) = ? 
+            AND CAST(strftime('%m', actual_date) AS INTEGER) = ?
         """
         print("query : " + str(query))
         cursor.execute(query, (year, month))
@@ -689,7 +692,10 @@ def get_month_ids(month, year):
 def get_monthly_averages(month, year):
     ids = get_month_ids(month, year)
     print("IDs for the month : " + str(month) + " : " + str(ids))
-    return []
+    return ids
+
+def get_daily_calorie_totals(month, year, ids):
+    print("in stub get_daily_calorie_totals(month, year)")
 
 def insert_meal(meal):
     try:

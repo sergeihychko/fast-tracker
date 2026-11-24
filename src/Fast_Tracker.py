@@ -117,7 +117,6 @@ class MainApp(tk.Tk):
             combo.bind("<<ComboboxSelected>>", rdn_on_change)
 
             data = database_driver.get_user_data(self.current_user, self.rdn)
-            print("back from get_user_data call with data : " + str(data))
             # Iterate through rows and columns to place widgets
             for row_idx, row_data in enumerate(data):
                 date_id = row_data[0]
@@ -379,8 +378,13 @@ class MainApp(tk.Tk):
             self.edit_meal_frame.pack()
 
         def report_monthly():
+            month = 10
+            year = 2026
             print("\n Reports / Monthly averages called \n")
-            monthly_averages = database_driver.get_monthly_averages(10, 2026)
+            ids = database_driver.get_monthly_averages(month, year)
+            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_calorie_totals(month, year, ids)
+            print("datapoints calories : " + str(datapoints))
 
         # Config
         config = ConfigParser()
