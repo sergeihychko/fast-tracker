@@ -55,6 +55,8 @@ class MainApp(tk.Tk):
         reports_menu.add_command(label="Monthly Carb Averages", command=lambda: report_monthly_carbs())
         reports_menu.add_command(label="Monthly Fat Averages", command=lambda: report_monthly_fat())
         reports_menu.add_separator()
+        reports_menu.add_command(label="Monthly Full Report", command=lambda: report_monthly_full())
+        reports_menu.add_separator()
         reports_menu.add_command(label="Exit", command=root.quit)
 
         # 4. Add the submenu to the menu bar
@@ -645,6 +647,70 @@ class MainApp(tk.Tk):
             self.report_frame.pack()
 
         def report_monthly_fat():
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Fiber Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
+            month = self.report_month
+            year = 2026
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_monthly_averages(month, year)
+            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_fat_totals(month, year, ids)
+            #print("datapoints calories : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(filtered_list, columns=['Fat', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            data = np.array(filtered_list)
+            x, y = data.T
+            tot = np.array(x)
+            day_average = round(np.sum(tot)/len(x), 2)
+            AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
+            AF.grid(row=4, column=0, sticky='w')
+            AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageFat.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
+
+        def report_monthly_full():
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
