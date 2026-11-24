@@ -75,7 +75,7 @@ class MainApp(tk.Tk):
         self.edit_d_frame = tk.Frame(root, background="#333333")
         self.edit_fs_frame = tk.Frame(root, background="#333333")
         self.report_frame = tk.Frame(root, background="#333333")
-        self.report_month = 10
+        self.report_month = 11
         self.report_year = 2026
 
         # Define the database file path
@@ -391,10 +391,10 @@ class MainApp(tk.Tk):
 
             self.edit_meal_frame.pack()
 
-        def create_rep_widget(dataset, parent_frame):
+        def create_rep_widget(dataset, parent_frame, col_header):
             #report canvas
             # 1. Convert to Pandas DataFrame
-            df = pd.DataFrame(dataset, columns=['Calories', 'Day'])
+            df = pd.DataFrame(dataset, columns=[col_header, 'Day'])
 
             # 2. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
@@ -431,7 +431,7 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Report")
+            popup.title("Monthly Calories Report")
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
@@ -443,7 +443,7 @@ class MainApp(tk.Tk):
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+            create_rep_widget(filtered_list, self.report_frame, "Calories")
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -483,7 +483,7 @@ class MainApp(tk.Tk):
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+            create_rep_widget(filtered_list, self.report_frame, "Protein")
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -524,7 +524,7 @@ class MainApp(tk.Tk):
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+            create_rep_widget(filtered_list, self.report_frame, "Fiber")
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -553,7 +553,7 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Fiber Report")
+            popup.title("Monthly Carbohydrates Report")
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
@@ -565,7 +565,7 @@ class MainApp(tk.Tk):
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+            create_rep_widget(filtered_list, self.report_frame, "Carbohydrates")
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -594,8 +594,8 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Fiber Report")
-            popup.geometry("600x550")
+            popup.title("Monthly Fat Report")
+            popup.geometry("500x510")
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
@@ -606,7 +606,7 @@ class MainApp(tk.Tk):
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+            create_rep_widget(filtered_list, self.report_frame, "Fat")
 
             def cancel():
                 self.report_frame.pack_forget()
