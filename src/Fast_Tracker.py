@@ -52,6 +52,8 @@ class MainApp(tk.Tk):
         reports_menu.add_command(label="Monthly Calorie Averages", command=lambda: report_monthly_calories())
         reports_menu.add_command(label="Monthly Protein Averages", command=lambda: report_monthly_protein())
         reports_menu.add_command(label="Monthly Fiber Averages", command=lambda: report_monthly_fiber())
+        reports_menu.add_command(label="Monthly Carb Averages", command=lambda: report_monthly_carbs())
+        reports_menu.add_command(label="Monthly Fat Averages", command=lambda: report_monthly_fat())
         reports_menu.add_separator()
         reports_menu.add_command(label="Exit", command=root.quit)
 
@@ -386,10 +388,13 @@ class MainApp(tk.Tk):
             self.edit_meal_frame.pack()
 
         def report_monthly_calories():
-            self.report_frame.pack_forget()
-            for child in self.report_frame.winfo_children():
-                child.destroy()
-            self.report_frame.pack()
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -446,10 +451,13 @@ class MainApp(tk.Tk):
             self.report_frame.pack()
 
         def report_monthly_protein():
-            self.report_frame.pack_forget()
-            for child in self.report_frame.winfo_children():
-                child.destroy()
-            self.report_frame.pack()
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -506,10 +514,13 @@ class MainApp(tk.Tk):
             self.report_frame.pack()
 
         def report_monthly_fiber():
-            self.report_frame.pack_forget()
-            for child in self.report_frame.winfo_children():
-                child.destroy()
-            self.report_frame.pack()
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -554,12 +565,138 @@ class MainApp(tk.Tk):
 
             data = np.array(datapoints)
             x, y = data.T
-            tcal = np.array(x)
-            day_average = round(np.sum(tcal)/len(x), 2)
-            AC = tk.Label(self.report_frame, text="Average daily Fiber", fg="white", bg="#333333", font={"Ariel", 30})
+            tot = np.array(x)
+            day_average = round(np.sum(tot)/len(x), 2)
+            AF = tk.Label(self.report_frame, text="Average daily Fiber", fg="white", bg="#333333", font={"Ariel", 30})
+            AF.grid(row=4, column=0, sticky='w')
+            AverageFiber = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageFiber.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
+
+        def report_monthly_carbs():
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Fiber Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
+            month = 10
+            year = 2026
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_monthly_averages(month, year)
+            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_carb_totals(month, year, ids)
+            print("datapoints calories : " + str(datapoints))
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            data = np.array(datapoints)
+            x, y = data.T
+            tot = np.array(x)
+            day_average = round(np.sum(tot)/len(x), 2)
+            AC = tk.Label(self.report_frame, text="Average daily Carbs", fg="white", bg="#333333", font={"Ariel", 30})
             AC.grid(row=4, column=0, sticky='w')
-            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageCalories.grid(row=4, column=1, sticky='w')
+            AverageCarbs = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageCarbs.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
+
+        def report_monthly_fat():
+            try:
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                self.report_frame.pack()
+            except tkinter.TclError:
+                pass  # Widget already destroyed
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Fiber Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
+            month = 10
+            year = 2026
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_monthly_averages(month, year)
+            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_fat_totals(month, year, ids)
+            print("datapoints calories : " + str(datapoints))
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            data = np.array(datapoints)
+            x, y = data.T
+            tot = np.array(x)
+            day_average = round(np.sum(tot)/len(x), 2)
+            AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
+            AF.grid(row=4, column=0, sticky='w')
+            AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageFat.grid(row=4, column=1, sticky='w')
             tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
                                                                                                             column=1,
                                                                                                             padx=5)

@@ -791,6 +791,16 @@ def get_daily_fiber(day_id):
         t = int(str(day_total))
         return [t, day_id[0]]
 
+def get_daily_carb_totals(month, year, ids):
+    carbs = []
+    print("in stub get_daily_carb_totals(month, year)")
+    for id in ids:
+        daily_f = get_daily_carbs(id)
+        carbs.append(daily_f)
+        #print(" : " + str(calories))
+    print("complete list of days in ids array : " + str(carbs))
+    return carbs
+
 def get_daily_carbs(day_id):
     val1 = str(day_id[0])
     print("in get_monthly_averages() :" + str(day_id) + ":")
@@ -812,6 +822,16 @@ def get_daily_carbs(day_id):
             day_total = np.sum(dt)
         t = int(str(day_total))
         return [t, day_id[0]]
+
+def get_daily_fat_totals(month, year, ids):
+    fat = []
+    print("in stub get_daily_fat_totals(month, year)")
+    for id in ids:
+        daily_f = get_daily_fat(id)
+        fat.append(daily_f)
+        #print(" : " + str(calories))
+    print("complete list of days in ids array : " + str(fat))
+    return fat
 
 def get_daily_fat(day_id):
     val1 = str(day_id[0])
