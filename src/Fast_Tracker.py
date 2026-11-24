@@ -73,6 +73,7 @@ class MainApp(tk.Tk):
         self.edit_d_frame = tk.Frame(root, background="#333333")
         self.edit_fs_frame = tk.Frame(root, background="#333333")
         self.report_frame = tk.Frame(root, background="#333333")
+        self.report_month = 10
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -402,17 +403,19 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = 10
+            month = self.report_month
             year = 2026
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
             print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_calorie_totals(month, year, ids)
             print("datapoints calories : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+            print("filtered : " + str(filtered_list))
 
             #report canvas
             # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(datapoints, columns=['Calories', 'Day'])
+            df = pd.DataFrame(filtered_list, columns=['Calories', 'Day'])
 
             # 3. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
@@ -437,7 +440,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(datapoints)
+            data = np.array(filtered_list)
             x, y = data.T
             tcal = np.array(x)
             day_average = round(np.sum(tcal)/len(x), 2)
@@ -465,17 +468,18 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = 10
+            month = self.report_month
             year = 2026
             #print("\n Reports / Monthly protein averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
             #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_protein_totals(month, year, ids)
             #print("datapoints protein : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             #report canvas
             # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(datapoints, columns=['Protein', 'Day'])
+            df = pd.DataFrame(filtered_list, columns=['Protein', 'Day'])
 
             # 3. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
@@ -500,7 +504,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(datapoints)
+            data = np.array(filtered_list)
             x, y = data.T
             tcal = np.array(x)
             day_average = round(np.sum(tcal)/len(x), 2)
@@ -528,7 +532,7 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = 10
+            month = self.report_month
             year = 2026
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
@@ -591,17 +595,18 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = 10
+            month = self.report_month
             year = 2026
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_carb_totals(month, year, ids)
-            print("datapoints calories : " + str(datapoints))
+            #print("datapoints calories : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             #report canvas
             # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
+            df = pd.DataFrame(filtered_list, columns=['Carbs', 'Day'])
 
             # 3. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
@@ -626,7 +631,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(datapoints)
+            data = np.array(filtered_list)
             x, y = data.T
             tot = np.array(x)
             day_average = round(np.sum(tot)/len(x), 2)
@@ -654,17 +659,18 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = 10
+            month = self.report_month
             year = 2026
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_fat_totals(month, year, ids)
-            print("datapoints calories : " + str(datapoints))
+            #print("datapoints calories : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
             #report canvas
             # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
+            df = pd.DataFrame(filtered_list, columns=['Fat', 'Day'])
 
             # 3. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
@@ -689,7 +695,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(datapoints)
+            data = np.array(filtered_list)
             x, y = data.T
             tot = np.array(x)
             day_average = round(np.sum(tot)/len(x), 2)

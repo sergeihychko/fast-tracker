@@ -138,7 +138,8 @@ def create_test_days():
                 (42, 'Friday', 1, '2026-11-20', 84, 85, 0, 0, 0),
                 (43, 'Saturday', 1, '2026-11-21', 86, 87, 0, 0, 0),
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
-                (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0)
+                (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
+                (46, 'Tuesday', 1, '2026-11-24', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -711,7 +712,7 @@ def get_daily_calories(day_id):
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
-            SELECT f.calories, d.id         
+            SELECT f.calories         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
@@ -744,7 +745,7 @@ def get_daily_protein(day_id):
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
-            SELECT f.protein, d.id         
+            SELECT f.protein         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
@@ -776,7 +777,7 @@ def get_daily_fiber(day_id):
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
-            SELECT f.fiber, d.id         
+            SELECT f.fiber         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
@@ -785,10 +786,12 @@ def get_daily_fiber(day_id):
         """
         cursor.execute(query_statement, (val1, ))
         fiber = cursor.fetchall()
+        print("debug fiber array to be totalled : " + str(fiber))
         if len(fiber) > 1:
             dt = np.array(fiber)
             day_total = np.sum(dt)
         t = int(str(day_total))
+        print("debug t = " + str(t))
         return [t, day_id[0]]
 
 def get_daily_carb_totals(month, year, ids):
@@ -808,7 +811,7 @@ def get_daily_carbs(day_id):
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
-            SELECT f.carbs, d.id         
+            SELECT f.carbs         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
@@ -840,7 +843,7 @@ def get_daily_fat(day_id):
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = """
-            SELECT f.fat, d.id         
+            SELECT f.fat         
                 FROM foodstuffs f
                 INNER JOIN meals m ON m.id IN (d.meal1, d.meal2, d.meal3, d.meal4, d.meal5)
                 INNER JOIN days d
