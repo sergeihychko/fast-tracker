@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import numpy as np
 
 from pywin.dialogs import login
 
@@ -48,7 +49,9 @@ class MainApp(tk.Tk):
 
         # 3. Create a 'Reports' submenu
         reports_menu = tk.Menu(menubar, tearoff=0)
-        reports_menu.add_command(label="Monthly Averages", command=lambda: report_monthly())
+        reports_menu.add_command(label="Monthly Calorie Averages", command=lambda: report_monthly_calories())
+        reports_menu.add_command(label="Monthly Protein Averages", command=lambda: report_monthly_protein())
+        reports_menu.add_command(label="Monthly Fiber Averages", command=lambda: report_monthly_fiber())
         reports_menu.add_separator()
         reports_menu.add_command(label="Exit", command=root.quit)
 
@@ -382,13 +385,11 @@ class MainApp(tk.Tk):
 
             self.edit_meal_frame.pack()
 
-        def report_monthly():
+        def report_monthly_calories():
             self.report_frame.pack_forget()
             for child in self.report_frame.winfo_children():
                 child.destroy()
             self.report_frame.pack()
-            next_foodstuff_id = database_driver.find_next_id("foodstuffs")
-            defualt_serving = 1
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
@@ -423,7 +424,7 @@ class MainApp(tk.Tk):
             canvas.draw()
 
             # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10)
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -431,7 +432,135 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            tk.Button(self.report_frame, text="Cancel", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=3,
+            data = np.array(datapoints)
+            x, y = data.T
+            tcal = np.array(x)
+            day_average = round(np.sum(tcal)/len(x), 2)
+            AC = tk.Label(self.report_frame, text="Average daily Calories", fg="white", bg="#333333", font={"Ariel", 30})
+            AC.grid(row=4, column=0, sticky='w')
+            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageCalories.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
+
+        def report_monthly_protein():
+            self.report_frame.pack_forget()
+            for child in self.report_frame.winfo_children():
+                child.destroy()
+            self.report_frame.pack()
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Protein Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
+            month = 10
+            year = 2026
+            #print("\n Reports / Monthly protein averages called \n")
+            ids = database_driver.get_monthly_averages(month, year)
+            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_protein_totals(month, year, ids)
+            #print("datapoints protein : " + str(datapoints))
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(datapoints, columns=['Protein', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            data = np.array(datapoints)
+            x, y = data.T
+            tcal = np.array(x)
+            day_average = round(np.sum(tcal)/len(x), 2)
+            AC = tk.Label(self.report_frame, text="Average daily Protein", fg="white", bg="#333333", font={"Ariel", 30})
+            AC.grid(row=4, column=0, sticky='w')
+            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageCalories.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                            column=1,
+                                                                                                            padx=5)
+            self.report_frame.pack()
+
+        def report_monthly_fiber():
+            self.report_frame.pack_forget()
+            for child in self.report_frame.winfo_children():
+                child.destroy()
+            self.report_frame.pack()
+
+            # 1. Create the secondary window
+            popup = tk.Toplevel(self.root, bg="dark blue")
+            popup.title("Monthly Fiber Report")
+            popup.geometry("600x550")
+            self.report_frame = tk.Frame(popup, background="#333333")
+
+            month = 10
+            year = 2026
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_monthly_averages(month, year)
+            print("number of days for month :" + str(month) + " : " + str(len(ids)))
+            datapoints = database_driver.get_daily_fiber_totals(month, year, ids)
+            print("datapoints calories : " + str(datapoints))
+
+            #report canvas
+            # 2. Convert to Pandas DataFrame
+            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
+
+            # 3. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 4. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
+            canvas.draw()
+
+            # 6. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+            def cancel():
+                self.report_frame.pack_forget()
+                for child in self.report_frame.winfo_children():
+                    child.destroy()
+                popup.destroy()
+
+            data = np.array(datapoints)
+            x, y = data.T
+            tcal = np.array(x)
+            day_average = round(np.sum(tcal)/len(x), 2)
+            AC = tk.Label(self.report_frame, text="Average daily Fiber", fg="white", bg="#333333", font={"Ariel", 30})
+            AC.grid(row=4, column=0, sticky='w')
+            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageCalories.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
                                                                                                             column=1,
                                                                                                             padx=5)
             self.report_frame.pack()
