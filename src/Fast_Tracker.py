@@ -76,6 +76,7 @@ class MainApp(tk.Tk):
         self.edit_fs_frame = tk.Frame(root, background="#333333")
         self.report_frame = tk.Frame(root, background="#333333")
         self.report_month = 10
+        self.report_year = 2026
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -390,6 +391,35 @@ class MainApp(tk.Tk):
 
             self.edit_meal_frame.pack()
 
+        def create_rep_widget(dataset, parent_frame):
+            #report canvas
+            # 1. Convert to Pandas DataFrame
+            df = pd.DataFrame(dataset, columns=['Calories', 'Day'])
+
+            # 2. Create the Matplotlib Figure
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot(111)
+
+            # 3. Plot the DataFrame using Pandas
+            df.plot(ax=ax, marker='o')
+            ax.set_title("Multidimensional List Graph")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Values")
+
+            # 4. Embed in Tkinter
+            canvas = FigureCanvasTkAgg(fig, master=parent_frame)
+            canvas.draw()
+
+            # 5. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        def get_average_from_dataset(filtered_list):
+            data = np.array(filtered_list)
+            x, y = data.T
+            tcal = np.array(x)
+            day_average = round(np.sum(tcal) / len(x), 2)
+            return day_average
+
         def report_monthly_calories():
             try:
                 self.report_frame.pack_forget()
@@ -406,35 +436,14 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
+            year = self.report_year
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_calorie_totals(month, year, ids)
-            print("datapoints calories : " + str(datapoints))
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
-            print("filtered : " + str(filtered_list))
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(filtered_list, columns=['Calories', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -442,10 +451,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(filtered_list)
-            x, y = data.T
-            tcal = np.array(x)
-            day_average = round(np.sum(tcal)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AC = tk.Label(self.report_frame, text="Average daily Calories", fg="white", bg="#333333", font={"Ariel", 30})
             AC.grid(row=4, column=0, sticky='w')
             AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
@@ -471,34 +477,13 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
-            #print("\n Reports / Monthly protein averages called \n")
+            year = self.report_year
             ids = database_driver.get_monthly_averages(month, year)
-            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_protein_totals(month, year, ids)
-            #print("datapoints protein : " + str(datapoints))
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(filtered_list, columns=['Protein', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -506,10 +491,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(filtered_list)
-            x, y = data.T
-            tcal = np.array(x)
-            day_average = round(np.sum(tcal)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AC = tk.Label(self.report_frame, text="Average daily Protein", fg="white", bg="#333333", font={"Ariel", 30})
             AC.grid(row=4, column=0, sticky='w')
             AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
@@ -535,33 +517,14 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
+            year = self.report_year
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_fiber_totals(month, year, ids)
-            print("datapoints calories : " + str(datapoints))
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(datapoints, columns=['Fiber', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -569,10 +532,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(datapoints)
-            x, y = data.T
-            tot = np.array(x)
-            day_average = round(np.sum(tot)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AF = tk.Label(self.report_frame, text="Average daily Fiber", fg="white", bg="#333333", font={"Ariel", 30})
             AF.grid(row=4, column=0, sticky='w')
             AverageFiber = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
@@ -598,34 +558,14 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
+            year = self.report_year
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_carb_totals(month, year, ids)
-            #print("datapoints calories : " + str(datapoints))
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(filtered_list, columns=['Carbs', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -633,10 +573,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(filtered_list)
-            x, y = data.T
-            tot = np.array(x)
-            day_average = round(np.sum(tot)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AC = tk.Label(self.report_frame, text="Average daily Carbs", fg="white", bg="#333333", font={"Ariel", 30})
             AC.grid(row=4, column=0, sticky='w')
             AverageCarbs = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
@@ -662,34 +599,14 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
+            year = self.report_year
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_fat_totals(month, year, ids)
-            #print("datapoints calories : " + str(datapoints))
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(filtered_list, columns=['Fat', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -697,10 +614,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(filtered_list)
-            x, y = data.T
-            tot = np.array(x)
-            day_average = round(np.sum(tot)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
             AF.grid(row=4, column=0, sticky='w')
             AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
@@ -726,34 +640,14 @@ class MainApp(tk.Tk):
             self.report_frame = tk.Frame(popup, background="#333333")
 
             month = self.report_month
-            year = 2026
+            year = self.report_year
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_monthly_averages(month, year)
-            #print("number of days for month :" + str(month) + " : " + str(len(ids)))
             datapoints = database_driver.get_daily_fat_totals(month, year, ids)
-            #print("datapoints calories : " + str(datapoints))
             filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            #report canvas
-            # 2. Convert to Pandas DataFrame
-            df = pd.DataFrame(filtered_list, columns=['Fat', 'Day'])
-
-            # 3. Create the Matplotlib Figure
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            # 4. Plot the DataFrame using Pandas
-            df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
-            ax.set_xlabel("Index")
-            ax.set_ylabel("Values")
-
-            # 4. Embed in Tkinter
-            canvas = FigureCanvasTkAgg(fig, master=self.report_frame)
-            canvas.draw()
-
-            # 6. Use .grid() to place the widget
-            canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame)
 
             def cancel():
                 self.report_frame.pack_forget()
@@ -761,10 +655,7 @@ class MainApp(tk.Tk):
                     child.destroy()
                 popup.destroy()
 
-            data = np.array(filtered_list)
-            x, y = data.T
-            tot = np.array(x)
-            day_average = round(np.sum(tot)/len(x), 2)
+            day_average = get_average_from_dataset(filtered_list)
             AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
             AF.grid(row=4, column=0, sticky='w')
             AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
