@@ -46,6 +46,21 @@ def init():
             foodstuff_id text,
             FOREIGN KEY (foodstuff_id) REFERENCES foodstuffs (id)
         );""",
+
+        """CREATE TABLE IF NOT EXISTS bp (
+                    id INTEGER, 
+                    actual_date DATE,
+                    systolic text,
+                    diastolic text,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                );""",
+
+        """CREATE TABLE IF NOT EXISTS heartrate (
+                    id INTEGER,
+                    actual_date DATE,
+                    rate text,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                );""",
     ]
 
     # create a database connection
