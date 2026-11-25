@@ -139,7 +139,7 @@ def create_test_days():
                 (43, 'Saturday', 1, '2026-11-21', 86, 87, 0, 0, 0),
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
                 (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
-                (46, 'Tuesday', 1, '2026-11-24', 91, 0, 0, 0, 0)
+                (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -467,7 +467,13 @@ def create_test_days():
                 (90, 65),
                 (91, 87),
                 (91, 68),
-                (91, 86)
+                (91, 86),
+                (92, 70),
+                (92, 70),
+                (92, 63),
+                (92, 81),
+                (92, 80),
+                (92, 39)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -549,7 +555,7 @@ def create_test_days():
                 (77, 'green beans 12 oz', 1, 120, 24, 4, 8, 0),
                 (78, 'cherries dark sweet 20', 1, 90, 22, 1, 3, 0),
                 (79, 'cherries dark sweet 10', 1, 45, 11, 1,2,0),
-                (80, 'Amazon Grocery, Mexican-Style Four Cheese 1oz', 1, 110, 2, 6, 0, 8),
+                (80, 'Mexican-Style Four Cheese 1oz', 1, 110, 2, 6, 0, 8),
                 (81, 'salsa fresh Amazon 4 tbs', 1, 10, 2, 0, 0, 0),
                 (82, 'strawberry preservest 2 tbs', 1, 100, 26, 0, 0, 0),
                 (83, 'Pataks Tikka Masala All Purpose Sauce',1, 40, 5, 1, 1, 2),

@@ -77,6 +77,7 @@ class MainApp(tk.Tk):
         self.report_frame = tk.Frame(root, background="#333333")
         self.report_month = 11
         self.report_year = 2026
+        self.popup = None
 
         # Define the database file path
         db_path = "../data/fast-tracker.db"
@@ -413,6 +414,17 @@ class MainApp(tk.Tk):
             # 5. Use .grid() to place the widget
             canvas.get_tk_widget().grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
+        def output_average(filtered_list, meta_type):
+            day_average = get_average_from_dataset(filtered_list)
+            ALabel = tk.Label(self.report_frame, text="Average daily " + str(meta_type), fg="white", bg="#333333",
+                              font={"Ariel", 30})
+            ALabel.grid(row=4, column=0, sticky='w')
+            AverageValue = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageValue.grid(row=4, column=1, sticky='w')
+            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                        column=1,
+                                                                                                        padx=5)
+
         def get_average_from_dataset(filtered_list):
             data = np.array(filtered_list)
             x, y = data.T
@@ -420,7 +432,14 @@ class MainApp(tk.Tk):
             day_average = round(np.sum(tcal) / len(x), 2)
             return day_average
 
+        def cancel():
+            self.report_frame.pack_forget()
+            for child in self.report_frame.winfo_children():
+                child.destroy()
+            self.popup.destroy()
+
         def report_monthly_calories():
+            meta_type = "Calories"
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -430,10 +449,10 @@ class MainApp(tk.Tk):
                 pass  # Widget already destroyed
 
             # 1. Create the secondary window
-            popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Calories Report")
-            popup.geometry("600x550")
-            self.report_frame = tk.Frame(popup, background="#333333")
+            self.popup = tk.Toplevel(self.root, bg="dark blue")
+            self.popup.title("Monthly " + meta_type + " Report")
+            self.popup.geometry("600x550")
+            self.report_frame = tk.Frame(self.popup, background="#333333")
 
             month = self.report_month
             year = self.report_year
@@ -445,23 +464,12 @@ class MainApp(tk.Tk):
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Calories")
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
+            output_average(filtered_list, meta_type)
 
-            day_average = get_average_from_dataset(filtered_list)
-            AC = tk.Label(self.report_frame, text="Average daily Calories", fg="white", bg="#333333", font={"Ariel", 30})
-            AC.grid(row=4, column=0, sticky='w')
-            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageCalories.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
             self.report_frame.pack()
 
         def report_monthly_protein():
+            meta_type = "Protein"
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -471,10 +479,10 @@ class MainApp(tk.Tk):
                 pass  # Widget already destroyed
 
             # 1. Create the secondary window
-            popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Protein Report")
-            popup.geometry("600x550")
-            self.report_frame = tk.Frame(popup, background="#333333")
+            self.popup = tk.Toplevel(self.root, bg="dark blue")
+            self.popup.title("Monthly " + meta_type + " Report")
+            self.popup.geometry("600x550")
+            self.report_frame = tk.Frame(self.popup, background="#333333")
 
             month = self.report_month
             year = self.report_year
@@ -485,23 +493,11 @@ class MainApp(tk.Tk):
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Protein")
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
-
-            day_average = get_average_from_dataset(filtered_list)
-            AC = tk.Label(self.report_frame, text="Average daily Protein", fg="white", bg="#333333", font={"Ariel", 30})
-            AC.grid(row=4, column=0, sticky='w')
-            AverageCalories = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageCalories.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
+            output_average(filtered_list, meta_type)
             self.report_frame.pack()
 
         def report_monthly_fiber():
+            meta_type = "Fiber"
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -512,9 +508,9 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Fiber Report")
+            self.popup.title("Monthly " + meta_type + " Report")
             popup.geometry("600x550")
-            self.report_frame = tk.Frame(popup, background="#333333")
+            self.report_frame = tk.Frame(self.popup, background="#333333")
 
             month = self.report_month
             year = self.report_year
@@ -526,23 +522,11 @@ class MainApp(tk.Tk):
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Fiber")
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
-
-            day_average = get_average_from_dataset(filtered_list)
-            AF = tk.Label(self.report_frame, text="Average daily Fiber", fg="white", bg="#333333", font={"Ariel", 30})
-            AF.grid(row=4, column=0, sticky='w')
-            AverageFiber = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageFiber.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
+            output_average(filtered_list, meta_type)
             self.report_frame.pack()
 
         def report_monthly_carbs():
+            meta_type = "Carbohydrates"
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -553,9 +537,9 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Carbohydrates Report")
+            self.popup.title("Monthly " + meta_type + " Report")
             popup.geometry("600x550")
-            self.report_frame = tk.Frame(popup, background="#333333")
+            self.report_frame = tk.Frame(self.popup, background="#333333")
 
             month = self.report_month
             year = self.report_year
@@ -567,23 +551,11 @@ class MainApp(tk.Tk):
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Carbohydrates")
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
-
-            day_average = get_average_from_dataset(filtered_list)
-            AC = tk.Label(self.report_frame, text="Average daily Carbs", fg="white", bg="#333333", font={"Ariel", 30})
-            AC.grid(row=4, column=0, sticky='w')
-            AverageCarbs = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageCarbs.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
+            output_average(filtered_list, meta_type)
             self.report_frame.pack()
 
         def report_monthly_fat():
+            meta_type = "Fat"
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -594,7 +566,7 @@ class MainApp(tk.Tk):
 
             # 1. Create the secondary window
             popup = tk.Toplevel(self.root, bg="dark blue")
-            popup.title("Monthly Fat Report")
+            self.popup.title("Monthly " + meta_type + " Report")
             popup.geometry("500x510")
             self.report_frame = tk.Frame(popup, background="#333333")
 
@@ -608,23 +580,11 @@ class MainApp(tk.Tk):
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Fat")
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
-
-            day_average = get_average_from_dataset(filtered_list)
-            AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
-            AF.grid(row=4, column=0, sticky='w')
-            AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageFat.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
+            output_average(filtered_list, meta_type)
             self.report_frame.pack()
 
         def report_monthly_full():
+            meta_types = ['Calories', 'Protein', 'Fiber', 'Carbohydrates', 'Fat']
             try:
                 self.report_frame.pack_forget()
                 for child in self.report_frame.winfo_children():
@@ -639,30 +599,18 @@ class MainApp(tk.Tk):
             popup.geometry("600x550")
             self.report_frame = tk.Frame(popup, background="#333333")
 
-            month = self.report_month
-            year = self.report_year
-            print("\n Reports / Monthly averages called \n")
-            ids = database_driver.get_monthly_averages(month, year)
-            datapoints = database_driver.get_daily_fat_totals(month, year, ids)
-            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+            for meta_type in meta_types:
+                month = self.report_month
+                year = self.report_year
+                print("\n Reports / Monthly averages called \n")
+                ids = database_driver.get_monthly_averages(month, year)
+                datapoints = database_driver.get_daily_fat_totals(month, year, ids)
+                filtered_list = [tup for tup in datapoints if tup[0] != 0]
 
-            # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame)
+                # call generic graph method
+                create_rep_widget(filtered_list, self.report_frame)
 
-            def cancel():
-                self.report_frame.pack_forget()
-                for child in self.report_frame.winfo_children():
-                    child.destroy()
-                popup.destroy()
-
-            day_average = get_average_from_dataset(filtered_list)
-            AF = tk.Label(self.report_frame, text="Average daily Fat", fg="white", bg="#333333", font={"Ariel", 30})
-            AF.grid(row=4, column=0, sticky='w')
-            AverageFat = tk.Label(self.report_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
-            AverageFat.grid(row=4, column=1, sticky='w')
-            tk.Button(self.report_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
-                                                                                                            column=1,
-                                                                                                            padx=5)
+                output_average(filtered_list, meta_type)
             self.report_frame.pack()
 
         # Config
