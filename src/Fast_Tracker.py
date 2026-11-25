@@ -55,6 +55,9 @@ class MainApp(tk.Tk):
         reports_menu.add_command(label="Monthly Carb Averages", command=lambda: report_monthly_carbs())
         reports_menu.add_command(label="Monthly Fat Averages", command=lambda: report_monthly_fat())
         reports_menu.add_separator()
+        reports_menu.add_command(label="Monthly Heart rate Averages", command=lambda: report_monthly_hr())
+        reports_menu.add_command(label="Monthly BP Averages", command=lambda: report_monthly_bp())
+        reports_menu.add_separator()
         reports_menu.add_command(label="Monthly Full Report", command=lambda: report_monthly_full())
         reports_menu.add_separator()
         reports_menu.add_command(label="Exit", command=root.quit)
@@ -406,7 +409,7 @@ class MainApp(tk.Tk):
 
             # 3. Plot the DataFrame using Pandas
             df.plot(ax=ax, marker='o')
-            ax.set_title("Multidimensional List Graph")
+            ax.set_title("Monthly Value over day Graph")
             ax.set_xlabel("Index")
             ax.set_ylabel("Values")
 
@@ -561,6 +564,43 @@ class MainApp(tk.Tk):
 
             # call generic graph method
             create_rep_widget(filtered_list, self.report_frame, "Fat", 0)
+
+            output_average(filtered_list, self.report_frame, meta_type, 0)
+            self.report_frame.pack()
+
+        def report_monthly_hr():
+            meta_type = "Fat"
+            cleanup_rep_widget()
+            create_reports_window_widget(meta_type, self.geometry_full)
+
+            month = self.report_month
+            year = self.report_year
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_month_ids_hr(month, year, self.current_user)
+            datapoints = database_driver.get_daily_hr_totals(month, year, ids)
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+            print("heart rate filtered list : " +str(filtered_list))
+
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame, "Heart Rate", 0)
+
+            output_average(filtered_list, self.report_frame, meta_type, 0)
+            self.report_frame.pack()
+
+        def report_monthly_bp():
+            meta_type = "Fat"
+            cleanup_rep_widget()
+            create_reports_window_widget(meta_type, self.geometry_full)
+
+            month = self.report_month
+            year = self.report_year
+            print("\n Reports / Monthly averages called \n")
+            ids = database_driver.get_month_ids_bp(month, year, self.current_user)
+            datapoints = database_driver.get_daily_bp_totals(month, year, ids)
+            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+
+            # call generic graph method
+            create_rep_widget(filtered_list, self.report_frame, "Blood Pressure", 0)
 
             output_average(filtered_list, self.report_frame, meta_type, 0)
             self.report_frame.pack()

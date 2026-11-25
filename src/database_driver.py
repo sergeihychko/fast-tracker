@@ -48,7 +48,7 @@ def init():
         );""",
 
         """CREATE TABLE IF NOT EXISTS bp (
-                    id INTEGER, 
+                    id INTEGER PRIMARY KEY, 
                     actual_date DATE,
                     systolic text,
                     diastolic text,
@@ -57,7 +57,7 @@ def init():
                 );""",
 
         """CREATE TABLE IF NOT EXISTS heartrate (
-                    id INTEGER,
+                    id INTEGER PRIMARY KEY, 
                     actual_date DATE,
                     rate text,
                     user_id INTEGER NOT NULL, 
@@ -157,7 +157,7 @@ def create_test_days():
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
                 (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
                 (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0),
-                (47, 'Wedesday', 1, '2026-11-25', 93, 0, 0, 0, 0)
+                (47, 'Wedesday', 1, '2026-11-25', 93, 94, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -494,7 +494,15 @@ def create_test_days():
                 (92, 39),
                 (92, 7),
                 (93, 54),
-                (93, 86)
+                (93, 86),
+                (94, 89),
+                (94, 83),
+                (94, 83),
+                (94, 37),
+                (94, 37),
+                (94, 73),
+                (94, 61),
+                (94, 66)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -584,13 +592,15 @@ def create_test_days():
                 (85, 'Triple Berry Mix, 1.25 cups', 1, 80, 18, 1, 5, 1),
                 (86, 'Triple Berry Mix, 1/2 serving', 1, 40, 9, 0, 3, 0),
                 (87, 'Buldak Spicy Instant Ramen Noodles', 1, 530, 85, 12, 4, 16),
-                (88, 'Quinoa boil in bag whole', 1, 310, 48, 12, 9, 6)
+                (88, 'Quinoa boil in bag whole', 1, 310, 48, 12, 9, 6),
+                (89, 'Quinoa boil in bag half', 1, 155, 24, 6, 4.5, 3)
             ]
             bp_data = [
                 (1, '2026-11-24', 117, 81, 1)
             ]
             hr_data = [
-                (1, '2026-11-24', 84, 1 )
+                (1, '2026-11-24', 84, 1 ),
+                (2, '2026-11-25', 61, 1)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
@@ -764,7 +774,7 @@ def get_daily_calories(day_id):
         if len(calories) > 1:
             dt = np.array(calories)
             day_total = np.sum(dt)
-        t = int(str(day_total))
+        t = float(str(day_total))
         return [t, day_id[0]]
 
 def get_daily_protein_totals(month, year, ids):
@@ -773,7 +783,7 @@ def get_daily_protein_totals(month, year, ids):
     for id in ids:
         daily_p = get_daily_protein(id)
         protein.append(daily_p)
-        #print(" : " + str(calories))
+        #print(" : " + str(protein))
     print("complete list of days in ids array : " + str(protein))
     return protein
 
@@ -797,7 +807,7 @@ def get_daily_protein(day_id):
         if len(protein) > 1:
             dt = np.array(protein)
             day_total = np.sum(dt)
-        t = int(str(day_total))
+        t = float(str(day_total))
         return [t, day_id[0]]
 
 def get_daily_fiber_totals(month, year, ids):
@@ -806,7 +816,7 @@ def get_daily_fiber_totals(month, year, ids):
     for id in ids:
         daily_f = get_daily_fiber(id)
         fiber.append(daily_f)
-        #print(" : " + str(calories))
+        #print(" : " + str(fiber))
     print("complete list of days in ids array : " + str(fiber))
     return fiber
 
@@ -830,7 +840,7 @@ def get_daily_fiber(day_id):
         if len(fiber) > 1:
             dt = np.array(fiber)
             day_total = np.sum(dt)
-        t = int(str(day_total))
+        t = float(str(day_total))
         print("debug t = " + str(t))
         return [t, day_id[0]]
 
@@ -840,7 +850,7 @@ def get_daily_carb_totals(month, year, ids):
     for id in ids:
         daily_f = get_daily_carbs(id)
         carbs.append(daily_f)
-        #print(" : " + str(calories))
+        #print(" : " + str(carbs))
     print("complete list of days in ids array : " + str(carbs))
     return carbs
 
@@ -863,7 +873,7 @@ def get_daily_carbs(day_id):
         if len(carbs) > 1:
             dt = np.array(carbs)
             day_total = np.sum(dt)
-        t = int(str(day_total))
+        t = float(str(day_total))
         return [t, day_id[0]]
 
 def get_daily_fat_totals(month, year, ids):
@@ -872,7 +882,7 @@ def get_daily_fat_totals(month, year, ids):
     for id in ids:
         daily_f = get_daily_fat(id)
         fat.append(daily_f)
-        #print(" : " + str(calories))
+        #print(" : " + str(fat))
     print("complete list of days in ids array : " + str(fat))
     return fat
 
@@ -895,8 +905,96 @@ def get_daily_fat(day_id):
         if len(fat) > 1:
             dt = np.array(fat)
             day_total = np.sum(dt)
-        t = int(str(day_total))
+        t = float(str(day_total))
         return [t, day_id[0]]
+
+def get_month_ids_hr(month, year, user_id):
+    with sqlite3.connect('../data/fast-tracker.db') as conn:
+        print("month  year  user : " + str(month) + " / " + str(year) + " / " + str(user_id))
+        cursor = conn.cursor()
+        query = """
+            SELECT id 
+            FROM heartrate 
+            WHERE CAST(strftime('%Y', actual_date) AS INTEGER) = ? 
+            AND CAST(strftime('%m', actual_date) AS INTEGER) = ?
+            AND user_id = ?
+        """
+        #print("query : " + str(query))
+        cursor.execute(query, (year, month, user_id))
+        ids = [row[0] for row in cursor.fetchall()]
+        return ids
+
+def get_month_ids_bp(month, year, user_id):
+    print("month  year  user : " + str(month) + " / " + str(year) + " / " + str(user_id))
+    with sqlite3.connect('../data/fast-tracker.db') as conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT id 
+            FROM bp 
+            WHERE CAST(strftime('%Y', actual_date) AS INTEGER) = ? 
+            AND CAST(strftime('%m', actual_date) AS INTEGER) = ?
+            AND user_id = ?
+        """
+        #print("query : " + str(query))
+        cursor.execute(query, (year, month, user_id))
+        ids = [row[0] for row in cursor.fetchall()]
+        return ids
+
+def get_daily_hr_totals(month, year, ids):
+    hr = []
+    print("in stub get_daily_hr_totals(month, year) :" + str(ids))
+    for id in ids:
+        #print("debug ID + " + str(id))
+        daily_hr = get_daily_hr(id)
+        hr.append(daily_hr)
+        print(" : " + str(hr))
+    print("complete list of days in ids array : " + str(hr))
+    return hr
+
+def get_daily_hr(hr_id):
+    val1 = str(hr_id)
+    print("in get_daily_hr() :" + str(hr_id) + ":")
+    heartrate = 0
+    with sqlite3.connect('../data/fast-tracker.db') as conn:
+        cursor = conn.cursor()
+        query_statement = f"""
+            SELECT h.rate         
+                FROM heartrate h
+                WHERE h.id = {hr_id};
+        """
+        #print(" the query for get_daily_hr() is :" + str(query_statement))
+        cursor.execute(query_statement)
+        hr = [row[0] for row in cursor.fetchall()]
+        return [int(hr[0]), hr_id]
+
+def get_daily_bp_totals(month, year, ids):
+    bp = []
+    print("in stub get_daily_bp_totals(month, year) :" + str(ids))
+    for id in ids:
+        daily_bp = get_daily_hr(id)
+        bp.append(daily_bp)
+        print(" : " + str(bp))
+    print("complete list of days in ids array : " + str(bp))
+    return bp
+
+def get_daily_bp(bp_id):
+    val1 = str(bp_id)
+    print("in get_daily_bp() :" + str(bp_id) + ":")
+    day_sys = 0
+    day_dia = 0
+    with sqlite3.connect('../data/fast-tracker.db') as conn:
+        cursor = conn.cursor()
+        query_statement = f"""
+            SELECT b.systolic, b.diastolic          
+                FROM bp b
+                WHERE hb.id = {bp_id};
+        """
+        cursor.execute(query_statement)
+        bp = [row[0] for row in cursor.fetchall()]
+        if len(bp) > 1:
+            day_sys = bp[0]
+            day_dia = bp[1]
+        return [day_sys, day_sys, bp_id]
 
 def insert_meal(meal):
     try:
