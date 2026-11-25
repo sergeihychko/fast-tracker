@@ -52,6 +52,7 @@ def init():
                     actual_date DATE,
                     systolic text,
                     diastolic text,
+                    user_id INTEGER NOT NULL, 
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 );""",
 
@@ -59,6 +60,7 @@ def init():
                     id INTEGER,
                     actual_date DATE,
                     rate text,
+                    user_id INTEGER NOT NULL, 
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 );""",
     ]
@@ -155,7 +157,7 @@ def create_test_days():
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
                 (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
                 (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0),
-                (47, 'Wedesday', 1, '2026-11-25', 0, 0, 0, 0, 0)
+                (47, 'Wedesday', 1, '2026-11-25', 93, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -490,7 +492,9 @@ def create_test_days():
                 (92, 81),
                 (92, 80),
                 (92, 39),
-                (92, 7)
+                (92, 7),
+                (93, 54),
+                (93, 86)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -582,17 +586,25 @@ def create_test_days():
                 (87, 'Buldak Spicy Instant Ramen Noodles', 1, 530, 85, 12, 4, 16),
                 (88, 'Quinoa boil in bag whole', 1, 310, 48, 12, 9, 6)
             ]
+            bp_data = [
+                (1, '2026-11-24', 117, 81, 1)
+            ]
+            hr_data = [
+                (1, '2026-11-24', 84, 1 )
+            ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
             cursor.executemany("INSERT INTO meals (id, foodstuff_id) VALUES (?, ?)", meals_data)
             cursor.executemany("INSERT INTO foodstuffs (id, description, serving, calories, carbs, protein, fiber, fat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", foodstuffs_data)
+            cursor.executemany("INSERT INTO bp (id, actual_date, systolic, diastolic,  user_id) VALUES (?, ?, ?, ?, ?)", bp_data)
+            cursor.executemany("INSERT INTO heartrate (id, actual_date, rate, user_id) VALUES (?, ?, ?, ?)", hr_data)
 
             # commit the changes
             conn.commit()
 
-            print("DAYS, MEALS and FOODSTUFFS table updated successfully.")
+            print("DAYS, MEALS, FOODSTUFFS, BP, HEARTRATE tables updated successfully.")
     except sqlite3.OperationalError as e:
-        print("Failed to update days, meals and foodstuffs table:", e)
+        print("Failed to create/update days, meals, foodstuffs, bp, and heartrate table:", e)
 
 def check_login(username, password):
 
