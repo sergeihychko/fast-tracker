@@ -139,7 +139,8 @@ def create_test_days():
                 (43, 'Saturday', 1, '2026-11-21', 86, 87, 0, 0, 0),
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
                 (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
-                (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0)
+                (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0),
+                (47, 'Wedesday', 1, '2026-11-25', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -473,7 +474,8 @@ def create_test_days():
                 (92, 63),
                 (92, 81),
                 (92, 80),
-                (92, 39)
+                (92, 39),
+                (92, 7)
             ]
             foodstuffs_data = [
                 (1, 'Wheat Bagel', 1, 220, 45, 10, 6, 2),
@@ -562,7 +564,8 @@ def create_test_days():
                 (84, 'Flax and Chia Seed Blend 1.5 tbsp', 1, 70, 4, 3, 3, 4),
                 (85, 'Triple Berry Mix, 1.25 cups', 1, 80, 18, 1, 5, 1),
                 (86, 'Triple Berry Mix, 1/2 serving', 1, 40, 9, 0, 3, 0),
-                (87, 'Buldak Spicy Instant Ramen Noodles', 1, 530, 85, 12, 4, 16)
+                (87, 'Buldak Spicy Instant Ramen Noodles', 1, 530, 85, 12, 4, 16),
+                (88, 'Quinoa boil in bag whole', 1, 310, 48, 12, 9, 6)
             ]
 
             cursor.executemany("INSERT INTO days (id, name, user_id, actual_date, meal1, meal2, meal3, meal4, meal5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", days_data)
