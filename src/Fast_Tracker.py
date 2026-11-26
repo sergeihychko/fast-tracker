@@ -4,6 +4,9 @@ import tkinter
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+
+from pywin.framework.editor import color
+
 import ftdataclasses
 from configparser import ConfigParser
 import pandas as pd
@@ -424,29 +427,23 @@ class MainApp(tk.Tk):
             print("the dataframe is : " + str(df))
 
             # Create figure and primary axis
-            fig, ax1 = plt.subplots()
+            fig, ax = plt.subplots()
 
             # Plot primary data on primary x-axis
-            ax1.plot(df['date'], df['systolic'], 'b-', label='Date vs systolic')
-            ax1.set_xlabel('Date')
-            ax1.set_ylabel('Pressure', color='b')
-            ax1.invert_yaxis()
+            ax.plot(df['date'], df['diastolic'], marker="o", linewidth=2, label='Date vs diastolic', color='blue')
+            ax.plot(df['date'], df['systolic'], marker="o", linewidth=2, label='Date vs systolic', color='orange')
+            ax.set_title('Blood Pressure')
+            ax.set_xlabel('Date')
+            ax.set_ylabel('Pressure', color='b')
+            #ax.invert_xaxis()
 
-            # Create secondary x-axis sharing the same y-axis
-            ax2 = ax1.twiny()
-
-            # Plot secondary data on secondary x-axis
-            ax2.plot(df['date'], df['diastolic'], 'r-', label='Date vs diastolic')
-            ax2.set_xlabel('Diastolic')
-
-            # Optional: Add legends
-            ax1.legend(loc='upper left')
-            ax2.legend(loc='lower right')
+            ax.legend()
+            ax.grid(True, linestyle='--', alpha=0.5)
 
             # Attach the figure to the Tkinter frame
             canvas = FigureCanvasTkAgg(fig, master=parent_frame)
             canvas.draw()
-            # 5. Use .grid() to place the widget
+            # Use .grid() to place the widget
             canvas.get_tk_widget().grid(row=0, column=0 + column_offset, columnspan=2, padx=10, pady=10)
 
         def output_average(filtered_list, parent_frame, meta_type, column_offset):
@@ -461,8 +458,8 @@ class MainApp(tk.Tk):
                                                                                                         padx=5)
 
         def output_two_averages(filtered_list, filtered_list2, parent_frame, meta_type, meta_type2, column_offset):
-            day_average = get_average_from_dataset(filtered_list)
-            day_average2 = get_average_from_dataset(filtered_list2)
+            day_average = round(sum(filtered_list) / len(filtered_list), 2)
+            day_average2 = round(sum(filtered_list2) / len(filtered_list2), 2)
             ALabel = tk.Label(parent_frame, text="Average daily " + str(meta_type), fg="white", bg="#333333",
                               font={"Ariel", 30})
             ALabel.grid(row=4, column=0+column_offset, sticky='w')
@@ -482,6 +479,7 @@ class MainApp(tk.Tk):
                                                                                                    padx=5)
 
         def get_average_from_dataset(filtered_list):
+            print("get avg : " + str(filtered_list))
             data = np.array(filtered_list)
             x, y = data.T
             tcal = np.array(x)
@@ -619,7 +617,7 @@ class MainApp(tk.Tk):
             self.report_frame.pack()
 
         def report_monthly_hr():
-            meta_type = "Fat"
+            meta_type = "Heart Rate"
             cleanup_rep_widget()
             create_reports_window_widget(meta_type, self.geometry_full)
 
@@ -645,20 +643,16 @@ class MainApp(tk.Tk):
 
             month = self.report_month
             year = self.report_year
-            print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_month_ids_bp(month, year, self.current_user)
             datapoints = database_driver.get_daily_bp_totals(month, year, ids)
             datapoints = dict(datapoints)
-            print("datapoints : " + str(datapoints))
             filtered_list = datapoints['systolic']
             filtered_list2 = datapoints['diastolic']
-            print("datapoints1 created as : " + str(filtered_list))
-            print("datapoints2 created as : " + str(filtered_list2))
 
             # call generic graph method
             create_rep_2axis_widget(datapoints, self.report_frame, "Blood Pressure", 0)
 
-            #output_two_averages(filtered_list, filtered_list2, self.report_frame, meta_type, meta_type2, 0)
+            output_two_averages(filtered_list, filtered_list2, self.report_frame, meta_type, meta_type2, 0)
             self.report_frame.pack()
 
         def report_monthly_full():

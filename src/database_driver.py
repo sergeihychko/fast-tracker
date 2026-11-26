@@ -600,8 +600,9 @@ def create_test_days():
             ]
             bp_data = [
                 (1, '2026-11-24', 117, 81, 1),
-                (2, '2026-11-24', 125, 80, 1),
-                (3, '2026-11-24', 115, 80, 1)
+                (2, '2026-11-25', 125, 80, 1),
+                (3, '2026-11-26', 115, 79, 1),
+                (4, '2026-11-27', 129, 85, 1)
             ]
             hr_data = [
                 (1, '2026-11-24', 84, 1 ),
@@ -1001,10 +1002,11 @@ def get_daily_bp(bp_id):
         cursor.execute(query_statement)
         result = cursor.fetchall()
         bp = result[0]
-        day_sys = str(bp[2])
-        day_dia = str(bp[3])
+        day_sys = int(bp[2])
+        day_dia = int(bp[3])
+        bp_date = int(bp[0])
         #print("return value = " + "'systolic':" + str(day_sys), "'diastolic':" + str(day_dia), "'date':" + str(bp_id))
-        return [day_sys, day_dia, str(bp_id)]
+        return [day_sys, day_dia, bp_date]
 
 def insert_meal(meal):
     try:
