@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import numpy as np
 
 from pywin.dialogs import login
@@ -402,23 +403,47 @@ class MainApp(tk.Tk):
             #report canvas
             # 1. Convert to Pandas DataFrame
             df = pd.DataFrame(dataset, columns=[col_header, 'Day'])
-
             # 2. Create the Matplotlib Figure
             fig = Figure(figsize=(5, 4), dpi=100)
             ax = fig.add_subplot(111)
-
             # 3. Plot the DataFrame using Pandas
             df.plot(ax=ax, marker='o')
             ax.set_title("Monthly Value over day Graph")
             ax.set_xlabel("Index")
             ax.set_ylabel("Values")
-
             # 4. Embed in Tkinter
             canvas = FigureCanvasTkAgg(fig, master=parent_frame)
             canvas.draw()
-
             # 5. Use .grid() to place the widget
             canvas.get_tk_widget().grid(row=0, column=0+column_offset, columnspan=2, padx=10, pady=10)
+
+        def create_rep_2axis_widget(dataset, parent_frame, col_header, column_offset):
+            #report canvas
+            print("inside create_rep_2axis_widget() dataset: " + str())
+            # 1. Convert to Pandas DataFrame
+            df = pd.DataFrame(dataset)
+            print("the dataframe is : " + str(df))
+
+            # Create figure and primary axis
+            fig, ax1 = plt.subplots()
+
+            # Plot primary data on primary x-axis
+            ax1.plot(df['date'], df['systolic'], 'b-', label='Date vs systolic')
+            ax1.set_xlabel('Date')
+            ax1.set_ylabel('Systolic', color='b')
+
+            # Create secondary x-axis sharing the same y-axis
+            ax2 = ax1.twiny()
+
+            # Plot secondary data on secondary x-axis
+            ax2.plot(df['date'], df['diastolic'], 'r-', label='Date vs diastolic')
+            ax2.set_xlabel('Diastolic')
+
+            # Optional: Add legends
+            ax1.legend(loc='upper left')
+            ax2.legend(loc='lower right')
+
+            plt.show()
 
         def output_average(filtered_list, parent_frame, meta_type, column_offset):
             day_average = get_average_from_dataset(filtered_list)
@@ -430,6 +455,27 @@ class MainApp(tk.Tk):
             tk.Button(parent_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
                                                                                                         column=1,
                                                                                                         padx=5)
+
+        def output_two_averages(filtered_list, filtered_list2, parent_frame, meta_type, meta_type2, column_offset):
+            day_average = get_average_from_dataset(filtered_list)
+            day_average2 = get_average_from_dataset(filtered_list2)
+            ALabel = tk.Label(parent_frame, text="Average daily " + str(meta_type), fg="white", bg="#333333",
+                              font={"Ariel", 30})
+            ALabel.grid(row=4, column=0+column_offset, sticky='w')
+            AverageValue = tk.Label(parent_frame, text=str(day_average), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageValue.grid(row=4, column=1+column_offset, sticky='w')
+            tk.Button(parent_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                        column=1,
+                                                                                                        padx=5)
+            ALabel2 = tk.Label(parent_frame, text="Average daily " + str(meta_type2), fg="white", bg="#333333",
+                              font={"Ariel", 30})
+
+            ALabel2.grid(row=5, column=0 + column_offset, sticky='w')
+            AverageValue2 = tk.Label(parent_frame, text=str(day_average2), fg="white", bg="#333333", font={"Ariel", 30})
+            AverageValue2.grid(row=5, column=1 + column_offset, sticky='w')
+            tk.Button(parent_frame, text="Close", bg="#333333", fg="#FFFFFF", command=cancel).grid(row=5,
+                                                                                                   column=1,
+                                                                                                   padx=5)
 
         def get_average_from_dataset(filtered_list):
             data = np.array(filtered_list)
@@ -588,7 +634,8 @@ class MainApp(tk.Tk):
             self.report_frame.pack()
 
         def report_monthly_bp():
-            meta_type = "Fat"
+            meta_type = "Systolic"
+            meta_type2 = "Diastolic"
             cleanup_rep_widget()
             create_reports_window_widget(meta_type, self.geometry_full)
 
@@ -597,12 +644,19 @@ class MainApp(tk.Tk):
             print("\n Reports / Monthly averages called \n")
             ids = database_driver.get_month_ids_bp(month, year, self.current_user)
             datapoints = database_driver.get_daily_bp_totals(month, year, ids)
-            filtered_list = [tup for tup in datapoints if tup[0] != 0]
+            datapoints = dict(datapoints)
+            print("datapoints : " + str(datapoints))
+            filtered_list = datapoints['systolic']
+            filtered_list2 = datapoints['diastolic']
+            filtered_list3 = datapoints['date']
+            print("datapoints1 created as : " + str(filtered_list))
+            print("datapoints2 created as : " + str(filtered_list2))
+            print("datapoints3 created as : " + str(filtered_list3))
 
             # call generic graph method
-            create_rep_widget(filtered_list, self.report_frame, "Blood Pressure", 0)
+            create_rep_2axis_widget(datapoints, self.report_frame, "Blood Pressure", 0)
 
-            output_average(filtered_list, self.report_frame, meta_type, 0)
+            output_two_averages(filtered_list, filtered_list2, self.report_frame, meta_type, meta_type2, 0)
             self.report_frame.pack()
 
         def report_monthly_full():

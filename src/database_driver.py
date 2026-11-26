@@ -1,4 +1,6 @@
 import sqlite3
+from unittest.util import sorted_list_difference
+
 import ftdataclasses
 import numpy as np
 
@@ -596,7 +598,9 @@ def create_test_days():
                 (89, 'Quinoa boil in bag half', 1, 155, 24, 6, 4.5, 3)
             ]
             bp_data = [
-                (1, '2026-11-24', 117, 81, 1)
+                (1, '2026-11-24', 117, 81, 1),
+                (2, '2026-11-24', 125, 80, 1),
+                (3, '2026-11-24', 115, 80, 1)
             ]
             hr_data = [
                 (1, '2026-11-24', 84, 1 ),
@@ -969,32 +973,43 @@ def get_daily_hr(hr_id):
 
 def get_daily_bp_totals(month, year, ids):
     bp = []
+    s_list = []
+    d_list = []
+    i_list = []
     print("in stub get_daily_bp_totals(month, year) :" + str(ids))
     for id in ids:
-        daily_bp = get_daily_hr(id)
-        bp.append(daily_bp)
-        print(" : " + str(bp))
+        daily_bp = get_daily_bp(id)
+        s_list.append(daily_bp[0])
+        d_list.append(daily_bp[1])
+        i_list.append(daily_bp[2])
+    bp.append(['systolic', s_list])
+    bp.append(['diastolic', d_list])
+    bp.append(['date', i_list])
     print("complete list of days in ids array : " + str(bp))
+    # keys = ['systolic', 'diastolic', 'date']
+    # bp_transposed = [dict(zip(keys, values)) for values in zip(*bp)]
+    # sys_array =
+    # dia_array =
+    # id_array =
+    #return ["'systolic':" + sys_array, "'diastolic':" + dia_array, "'date':" + str(id_array)]
     return bp
 
 def get_daily_bp(bp_id):
     val1 = str(bp_id)
-    print("in get_daily_bp() :" + str(bp_id) + ":")
-    day_sys = 0
-    day_dia = 0
     with sqlite3.connect('../data/fast-tracker.db') as conn:
         cursor = conn.cursor()
         query_statement = f"""
-            SELECT b.systolic, b.diastolic          
+            SELECT *          
                 FROM bp b
-                WHERE hb.id = {bp_id};
+                WHERE b.id = {bp_id};
         """
         cursor.execute(query_statement)
-        bp = [row[0] for row in cursor.fetchall()]
-        if len(bp) > 1:
-            day_sys = bp[0]
-            day_dia = bp[1]
-        return [day_sys, day_sys, bp_id]
+        result = cursor.fetchall()
+        bp = result[0]
+        day_sys = str(bp[2])
+        day_dia = str(bp[3])
+        #print("return value = " + "'systolic':" + str(day_sys), "'diastolic':" + str(day_dia), "'date':" + str(bp_id))
+        return [day_sys, day_dia, str(bp_id)]
 
 def insert_meal(meal):
     try:
