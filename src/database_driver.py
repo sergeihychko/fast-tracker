@@ -159,7 +159,8 @@ def create_test_days():
                 (44, 'Sunday', 1, '2026-11-22', 88, 0, 0, 0, 0),
                 (45, 'Monday', 1, '2026-11-23', 89, 90, 0, 0, 0),
                 (46, 'Tuesday', 1, '2026-11-24', 91, 92, 0, 0, 0),
-                (47, 'Wedesday', 1, '2026-11-25', 93, 94, 0, 0, 0)
+                (47, 'Wedesday', 1, '2026-11-25', 93, 94, 0, 0, 0),
+                (48, 'Thursday', 1, '2026-11-26', 0, 0, 0, 0, 0)
             ]
             meals_data = [
                 (1, 1),
@@ -986,12 +987,6 @@ def get_daily_bp_totals(month, year, ids):
     bp.append(['diastolic', d_list])
     bp.append(['date', i_list])
     print("complete list of days in ids array : " + str(bp))
-    # keys = ['systolic', 'diastolic', 'date']
-    # bp_transposed = [dict(zip(keys, values)) for values in zip(*bp)]
-    # sys_array =
-    # dia_array =
-    # id_array =
-    #return ["'systolic':" + sys_array, "'diastolic':" + dia_array, "'date':" + str(id_array)]
     return bp
 
 def get_daily_bp(bp_id):

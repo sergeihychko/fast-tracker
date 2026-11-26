@@ -419,7 +419,6 @@ class MainApp(tk.Tk):
 
         def create_rep_2axis_widget(dataset, parent_frame, col_header, column_offset):
             #report canvas
-            print("inside create_rep_2axis_widget() dataset: " + str())
             # 1. Convert to Pandas DataFrame
             df = pd.DataFrame(dataset)
             print("the dataframe is : " + str(df))
@@ -430,7 +429,8 @@ class MainApp(tk.Tk):
             # Plot primary data on primary x-axis
             ax1.plot(df['date'], df['systolic'], 'b-', label='Date vs systolic')
             ax1.set_xlabel('Date')
-            ax1.set_ylabel('Systolic', color='b')
+            ax1.set_ylabel('Pressure', color='b')
+            ax1.invert_yaxis()
 
             # Create secondary x-axis sharing the same y-axis
             ax2 = ax1.twiny()
@@ -443,7 +443,11 @@ class MainApp(tk.Tk):
             ax1.legend(loc='upper left')
             ax2.legend(loc='lower right')
 
-            plt.show()
+            # Attach the figure to the Tkinter frame
+            canvas = FigureCanvasTkAgg(fig, master=parent_frame)
+            canvas.draw()
+            # 5. Use .grid() to place the widget
+            canvas.get_tk_widget().grid(row=0, column=0 + column_offset, columnspan=2, padx=10, pady=10)
 
         def output_average(filtered_list, parent_frame, meta_type, column_offset):
             day_average = get_average_from_dataset(filtered_list)
@@ -648,15 +652,13 @@ class MainApp(tk.Tk):
             print("datapoints : " + str(datapoints))
             filtered_list = datapoints['systolic']
             filtered_list2 = datapoints['diastolic']
-            filtered_list3 = datapoints['date']
             print("datapoints1 created as : " + str(filtered_list))
             print("datapoints2 created as : " + str(filtered_list2))
-            print("datapoints3 created as : " + str(filtered_list3))
 
             # call generic graph method
             create_rep_2axis_widget(datapoints, self.report_frame, "Blood Pressure", 0)
 
-            output_two_averages(filtered_list, filtered_list2, self.report_frame, meta_type, meta_type2, 0)
+            #output_two_averages(filtered_list, filtered_list2, self.report_frame, meta_type, meta_type2, 0)
             self.report_frame.pack()
 
         def report_monthly_full():
